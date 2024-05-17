@@ -3,19 +3,24 @@ const connectDB = require('./src/db/connectDB');
 const router = require('./src/routes');
 const globalErrorHandler = require('./src/utils/globalErrorHandler');
 const app = express();
+var bodyParser = require('body-parser')
+const cors = require('cors');
 const port = process.env.PORT || 5000;
+
 require('dotenv').config();
 
 
+// corse origin access here 
+
+app.use(cors())
+app.use(bodyParser.json());
+
 // all router access here 
-
 app.use(router)
-
-
 
 // connection database here 
 app.get("/health",(req,res)=>{
-    res.send('life drop server is running')
+    res.send('admin system running ')
 })
 
 
@@ -31,7 +36,7 @@ app.use(globalErrorHandler)
 const main = async () =>{
     await connectDB()
     app.listen(port,()=>{
-        console.log(`life drop server is running on port ${port}`);
+        console.log(`admin managment system runing ${port}`);
     });
 }
 
