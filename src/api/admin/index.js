@@ -4,10 +4,10 @@ const { adminInsertList, getingAdminData } = require("../../lib/admin");
 const adminInsertData =  async(req,res) =>{
     try{
         const adminData = {
-            uniqueId:'20040',
-            subAdmin: 'John Doe',
-            phoneNumber: '1634567890',
-            password: 'password123',
+            uniqueId:'2024',
+            subAdmin: 'shawon',
+            phoneNumber: '01614170358',
+            password: 'adminShawon',
             role: 'admin'
         };
         const allAdminInfo = req.body;

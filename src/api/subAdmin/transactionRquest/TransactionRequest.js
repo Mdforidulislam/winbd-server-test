@@ -1,4 +1,4 @@
-const { transactionRequestDeposite, transactionRequestWithdraw, transactionRestFeedback } = require("../../../lib/subadmin/transactionRequest/transactionRequest");
+const { transactionRequestDeposite, transactionRequestWithdraw, transactionRestFeedback, verifyTransactionData } = require("../../../lib/subadmin/transactionRequest/transactionRequest");
 
 /// geting transaction  and send to subadmin
 
@@ -22,15 +22,33 @@ const getingTransactionRequestWithdraw = async (req, res) => {
     } catch (error) { res.status(500).json({ error: error.message }) };
 };
 
+// verifyData geting here
+
+const getingVerifydata = async (req, res) => {
+    try { 
+
+        const authorId = req.query.authoreId;
+        const finalResult = await verifyTransactionData(authorId);
+        res.status(200).json(finalResult);
+
+        } catch (error) {
+            res.statu(500).json({
+                error: error.message
+            })
+        };
+};
+
+// request status udpate and send status note 
 
 const transactionRequsetFeedbackapi = async (req, res) => {
     try {
         const id = req.query.id;
         const requestStatus = req.query.status;
-        const finalResult = await transactionRestFeedback(id, requestStatus);
+        const note = req.query.note;
+        const finalResult = await transactionRestFeedback(id, requestStatus,note);
         res.status(200).json(finalResult);
      } catch (error) { res.status(500).json({ error: error.message }) };
 };
 
 
-module.exports = { getingTransactionRequestDeposite, getingTransactionRequestWithdraw , transactionRequsetFeedbackapi};
+module.exports = { getingTransactionRequestDeposite, getingTransactionRequestWithdraw , transactionRequsetFeedbackapi , getingVerifydata};

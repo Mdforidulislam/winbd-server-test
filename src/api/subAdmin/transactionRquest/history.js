@@ -1,10 +1,16 @@
 const { transactionHistory } = require("../../../lib/subadmin/transactionRequest/history");
 
+// geting history value 
 const getingHistoryapi = async (req, res) => {
     try {
+        console.log('call the api');
         const atuhorId = req.query.authorId;
-        const finalResult = await transactionHistory(atuhorId);
+        const date = req.query.date;
+        const userName = req.query.userName;
+        const pageNumber = req.query.pageNumber;
+        const finalResult = await transactionHistory(atuhorId, userName, pageNumber, date);
         res.status(200).json(finalResult);
+
      } catch (error) { res.status(500).json({ error: error.message }) };
 }
 

@@ -1,33 +1,54 @@
-const { default: mongoose } = require("mongoose");
-
+const mongoose = require("mongoose");
 
 const paymentMethodSchema = new mongoose.Schema({
     number: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
-    transactionType: {
+    depositeChannel: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     transactionMethod: {
         type: String,
-        required: true
+        required: true,
+        trim: true,
+        index: true // Add index here
     },
     Logo: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     authorId: {
         type: String,
         required: true,
+        trim: true,
+        index: true // Add index here
+    },
+    note: {
+        type: {
+            title: { type: String, required: true, trim: true },
+            list: [{ type: String, trim: true }],
+            remainder: { type: String, required: true, trim: true }
+        },
+        required: false
     },
     status: {
         type: String,
-        default: 'active'
-    },
-})
+        default: 'deActive',
+        trim: true,
+        index: true // Add index here
+    }
+});
 
-const PaymentMehod = mongoose.model('paymentMethod', paymentMethodSchema);
+// Create compound index for authorId and transactionMethod
+paymentMethodSchema.index({ authorId: 1, transactionMethod: 1 });
 
-module.exports = PaymentMehod;
+const PaymentMethodDeafult = mongoose.model('PaymentMethodDeafult', paymentMethodSchema);
+const PaymentMethodActive = mongoose.model('PaymentMethodActive', paymentMethodSchema);
+
+module.exports = { PaymentMethodDeafult, PaymentMethodActive };
+

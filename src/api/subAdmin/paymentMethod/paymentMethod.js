@@ -1,4 +1,4 @@
-const { addTransactionMethod, getingPaymentMethod, updatePaymentmethod } = require("../../../lib/subadmin/paymentMethod/paymentMethod")
+const { addTransactionMethod, getingPaymentMethod, updatePaymentmethod } = require("../../../lib/subadmin/paymentMethod/paymentSystem");
 
 const transactionMethod = async (req, res) => {
     try {
@@ -15,23 +15,21 @@ const transactionMethod = async (req, res) => {
 const getingPaymentmethod = async (req, res) => {
     try { 
         const authorId = req.query.uniqueId;
-        console.log(authorId,'check api ');
-        const finalResult = await getingPaymentMethod(authorId);
+        const activeId = req.query.activeId;
+        const paymentType = req.query.paymentType;
+        const finalResult = await getingPaymentMethod(authorId , paymentType , activeId);
         res.status(200).json(finalResult);
-
     } catch(error) {
         res.status(500).json({error : error.message})
     }
 }
 
 // update data paymentMehotd
-
 const updatePaymentMethodNumber = async (req, res) => {
     try {
         const updateInfo = req.body;
         const finalResult = await updatePaymentmethod(updateInfo)
         res.status(200).json(finalResult)
-
      } catch (error) { 
         res.status(500).json({error : error.message})
     };

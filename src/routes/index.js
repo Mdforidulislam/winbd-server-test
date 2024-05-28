@@ -1,14 +1,24 @@
 const { adminInsertData, getAdminInfoList } = require('../api/admin');
+const { insertDynamiceUrl, getingDynamicallyUrl } = require('../api/admin/dynamiceUrl/dynamicUrl');
+const { insertPayInstraction, getingPayInstraction } = require('../api/admin/payInstraction');
 const { getingSubAdmin, subAdminInsert } = require('../api/subAdmin');
 const { getingUserShowSubAdmin } = require('../api/subAdmin/getUsers/getUsers');
 const { transactionMethod, getingPaymentmethod, updatePaymentMethodNumber } = require('../api/subAdmin/paymentMethod/paymentMethod');
+const { promtionOfferinser, getingPromotinOfferInfo, updatePromotionData, deletedPromtion } = require('../api/subAdmin/promotion/promotion');
+const { insertSocialMediaLink, getingSocialLink } = require('../api/subAdmin/socialMedia');
 const { getingHistoryapi } = require('../api/subAdmin/transactionRquest/history');
-const { getingTransactionRequestDeposite, getingTransactionRequestWithdraw, transactionRequsetFeedbackapi } = require('../api/subAdmin/transactionRquest/TransactionRequest');
+const { getingTransactionRequestDeposite, getingTransactionRequestWithdraw, transactionRequsetFeedbackapi, getingVerifydata } = require('../api/subAdmin/transactionRquest/TransactionRequest');
 const { userInsert, getingUsersData } = require('../api/users');
 const { userHistoryGeting } = require('../api/users/history/userHistory');
+const { getingSubAdminSocialLink } = require('../api/users/passsword/passwordForgot');
+const { promotionOfferShow } = require('../api/users/promotion/promotion');
 const { showNumber } = require('../api/users/showNumber/showNumber');
 const { transactionSave } = require('../api/users/transaction/transaction');
 const { adminUserValidation } = require('../middlewares/AdminUsersValidation');
+
+
+
+// ================================= below api call ===========================================
 
 
 
@@ -34,10 +44,31 @@ router.post('/insertTransaction', transactionSave); // save the transaction data
 router.get('/transactionReqDopsite', getingTransactionRequestDeposite); // userTransaction Request and send to subadmin  deposite 
 router.get('/transactionReqWith', getingTransactionRequestWithdraw); // usertransaction Request and send to subamdin withdraw 
 router.put('/transactionFeedback', transactionRequsetFeedbackapi); // update the transaction requestion 
-router.get('/getingHistory', getingHistoryapi); // this is history geting end point
+router.get('/getingHistory', getingHistoryapi); // this is history send to subadmin not processing data 
+router.get('/getingVerifydata', getingVerifydata); // geting verify data send to subadmin
 router.get('/userHistory', userHistoryGeting); // geting user history send to the users
 
+router.post('/insertPayInstraction', insertPayInstraction); // payInstraction insert to database 
+router.get('/getingPaymentInstraction', getingPayInstraction); // geting instraction to send global way
 
-router.get('/userValidation', adminUserValidation) // isRoleExite inside the database ( check )
+//  forgot password here
+router.post('/insertSocialMFPF',insertSocialMediaLink); // insert the social link here for password forgot 
+router.get('/getSocialMFPF', getingSocialLink); // get the social medial info send to subadmin
+router.get('/getinPassordContact', getingSubAdminSocialLink); // geting socailinfo send to users for contact subadmin
+
+// insert Dynamically url
+router.patch('/insertDynamiceUrl', insertDynamiceUrl); // insert dynamically url 
+router.get('/getingDynamicallyUrl', getingDynamicallyUrl); // geting dynamically url
+
+// promotion api make here
+router.post('/promtionOfferinser', promtionOfferinser); // insert the promotion data here
+router.get('/getingPromotininfo', getingPromotinOfferInfo); // geting promotion offer info send admin page
+router.patch('/updatePromotionData', updatePromotionData); // update the promotion 
+router.delete('/deletedPromtion', deletedPromtion); // delete the promotion 
+router.get('/promotionOfferShow', promotionOfferShow); // send to promotion offer title dscription to users
+
+
+// ===================== role validation ===============================
+router.get('/userValidation', adminUserValidation); // isRoleExite inside the database ( check )
 
 module.exports = router

@@ -1,5 +1,5 @@
-const Transaction = require("../../../models/transaction");
-
+const PromotionOffers = require("../../../models/promotion");
+const Transaction = require("../../../models/transactions");
 
 const insertTransaction = async (transInfo) => {
     try {
@@ -8,25 +8,38 @@ const insertTransaction = async (transInfo) => {
             return { message: "Please provide correct data with required fields: transactionType, amount, number, authorId" };
         }
 
-        // Delete unnecessary fields for 'withdraw' transactions
-        if (transInfo.transactionType === 'withdraw') {
-            delete transInfo.paymentMethod;
-            delete transInfo.paymentChannel;
-            delete transInfo.transactionId;
-        }
+        console.log(transInfo);
+
         // Check if transaction with the same ID already exists
-        if (transInfo.transactionType === 'deposite') {
+        if (transInfo.transactionType === 'deposit') {
             const isExistDataCheck = await Transaction.findOne({ transactionId: transInfo.transactionId });
-            console.log("Existing transaction:", isExistDataCheck);
-    
             if (isExistDataCheck) {
                 return { message: "Transaction already exists" };
             }
         }
 
+        //  calculation promotion offer here 
+        if (transInfo.offers && transInfo.offers.length > 0) {
+            for (const item of transInfo.offers) {
+                const promotionOffer = await PromotionOffers.findOne({ title: item.title });
+                if (promotionOffer && transInfo.amount > promotionOffer.amount) {
+                    let offerAmount = 0;
+                    let turnover = 0;
+                    if (promotionOffer.percentage) {
+                        offerAmount = (transInfo.amount * promotionOffer.percentage) / 100;
+                    } else if (promotionOffer.fixedAmount) {
+                        offerAmount = promotionOffer.fixedAmount;
+                    }
+                    // inlcude the opbiotn value 
+                    turnover = offerAmount * parseInt(promotionOffer.turnover);
+                    item.offerAmount = offerAmount;
+                    item.turnover = turnover;
+                }
+            }
+        }
+
         // Create and save the transaction
         const insertedTransaction = await Transaction.create(transInfo);
-        console.log("Inserted transaction:", insertedTransaction);
 
         if (insertedTransaction) {
             return { message: "Transaction inserted successfully" };
@@ -37,7 +50,4 @@ const insertTransaction = async (transInfo) => {
     }
 };
 
-
-
 module.exports = { insertTransaction };
-

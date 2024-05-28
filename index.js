@@ -5,6 +5,7 @@ const globalErrorHandler = require('./src/utils/globalErrorHandler');
 const app = express();
 var bodyParser = require('body-parser')
 const cors = require('cors');
+const { connectRedis } = require('./src/config/redis');
 const port = process.env.PORT || 5000;
 
 require('dotenv').config();
@@ -32,13 +33,15 @@ app.all('*',(req,res,next)=>{
 
 app.use(globalErrorHandler)
 
-
+// connect mongodb
 const main = async () =>{
     await connectDB()
     app.listen(port,()=>{
         console.log(`admin managment system runing ${port}`);
     });
 }
+
+
 
 main()
 
