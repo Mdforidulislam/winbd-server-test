@@ -35,6 +35,10 @@ const paymentMethodSchema = new mongoose.Schema({
         },
         required: false
     },
+    idNumber: {
+        type: String,
+        required:false
+    },
     status: {
         type: String,
         default: 'deActive',

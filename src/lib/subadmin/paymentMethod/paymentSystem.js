@@ -1,5 +1,6 @@
 const { PaymentMethodDeafult, PaymentMethodActive } = require("../../../models/paymentMethod");
 
+
 // Insert a payment method
 const addTransactionMethod = async (paymentInfo) => {
     try {
@@ -10,31 +11,42 @@ const addTransactionMethod = async (paymentInfo) => {
     }
 };
 
-
 // Fetch payment methods
 
-const getingPaymentMethod = async (authorId , paymentType , activeId) => {
+// Function to fetch and combine payment methods
+const getingPaymentMethod = async (authorId, paymentType) => {
     try {
-        // Fetch data from the database
-        const paymentMethods = await PaymentMethodDeafult.find({depositeChannel: paymentType}).lean();
-        const activeMethods = await PaymentMethodActive.find({$and:[{authorId: authorId},{depositeChannel: paymentType}] }).lean();
+        // Fetch default and active payment methods from the database
+        const [defaultMethods, activeMethods] = await Promise.all([
+            PaymentMethodDeafult.find({ depositeChannel: paymentType }).lean(),
+            PaymentMethodActive.find({ authorId, depositeChannel: paymentType }).lean()
+        ]);
 
-        // Filter out active payment methods
-        const filteredMethods = paymentMethods.filter(item => !activeId.includes(item._id.toString()));
-        const combinedMethods = [...filteredMethods, ...activeMethods].map((item) => ({
-            id: item._id,
-            number: item.number,
-            depositeChannel: item.depositeChannel,
-            transactionMethod: item.transactionMethod,
-            note: item.note,
-            status: item.status,
-            Logo: item.Logo,
+        // Create a Set of active method ID numbers for quick lookup
+        const activeMethodIdNumbers = new Set(activeMethods.map(method => method.idNumber));
+
+        // Filter out default methods that are also active
+        const filteredMethods = defaultMethods.filter(method => !activeMethodIdNumbers.has(method.idNumber));
+
+        // Combine the filtered default methods with the active methods
+        const combinedMethods = [...filteredMethods, ...activeMethods].map(method => ({
+            id: method._id,
+            number: method.number,
+            depositeChannel: method.depositeChannel,
+            transactionMethod: method.transactionMethod,
+            note: method.note,
+            status: method.status,
+            Logo: method.Logo, // Ensure consistent key naming (lowercase 'logo')
+            idNumber: method.idNumber,
         }));
+
         return combinedMethods;
     } catch (error) {
+        console.error("Error fetching payment methods:", error);
         return { error: error.message || "An error occurred while fetching payment methods" };
     }
 };
+
 
 
 // Update or insert a payment method

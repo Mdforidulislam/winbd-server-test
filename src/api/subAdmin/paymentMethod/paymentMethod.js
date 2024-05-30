@@ -15,9 +15,8 @@ const transactionMethod = async (req, res) => {
 const getingPaymentmethod = async (req, res) => {
     try { 
         const authorId = req.query.uniqueId;
-        const activeId = req.query.activeId;
         const paymentType = req.query.paymentType;
-        const finalResult = await getingPaymentMethod(authorId , paymentType , activeId);
+        const finalResult = await getingPaymentMethod(authorId , paymentType );
         res.status(200).json(finalResult);
     } catch(error) {
         res.status(500).json({error : error.message})

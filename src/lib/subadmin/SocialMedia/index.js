@@ -61,9 +61,8 @@ const getSocialMediaLink = async (authorId) => {
                   message: "Successfully retrieved data",
                   data: { socialMediaLinks: sanitizedSocialMediaLinks }
             };
-            return responseData
-
-            
+            return responseData;
+       
       } else {
         return { message: "Failed to fetch data" };
       }

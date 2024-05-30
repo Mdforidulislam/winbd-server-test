@@ -35,6 +35,10 @@ const socialMediaLinkSchema = new mongoose.Schema({
         teligram: {
             type: socialMediaPlatformSchema,
             required: false
+        },
+        liveChat: {
+            type: socialMediaPlatformSchema,
+            required: false
         }
     }
 });
