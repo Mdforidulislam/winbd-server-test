@@ -5,12 +5,12 @@ const { getingSubAdmin, subAdminInsert } = require('../api/subAdmin');
 const { getingUserShowSubAdmin } = require('../api/subAdmin/getUsers/getUsers');
 const { transactionMethod, getingPaymentmethod, updatePaymentMethodNumber } = require('../api/subAdmin/paymentMethod/paymentMethod');
 const { promtionOfferinser, getingPromotinOfferInfo, updatePromotionData, deletedPromtion } = require('../api/subAdmin/promotion/promotion');
-const { insertSocialMediaLink, getingSocialLink } = require('../api/subAdmin/socialMedia');
+const { insertSocialMediaLink, getingSocialLink} = require('../api/subAdmin/socialMedia');
 const { getingHistoryapi } = require('../api/subAdmin/transactionRquest/history');
 const { getingTransactionRequestDeposite, getingTransactionRequestWithdraw, transactionRequsetFeedbackapi, getingVerifydata } = require('../api/subAdmin/transactionRquest/TransactionRequest');
 const { userInsert, getingUsersData } = require('../api/users');
 const { userHistoryGeting } = require('../api/users/history/userHistory');
-const { getingSubAdminSocialLink } = require('../api/users/passsword/passwordForgot');
+const { getingSubAdminSocialLink, passwordForgotuser } = require('../api/users/passsword/passwordForgot');
 const { promotionOfferShow } = require('../api/users/promotion/promotion');
 const { showNumber } = require('../api/users/showNumber/showNumber');
 const { transactionSave } = require('../api/users/transaction/transaction');
@@ -40,6 +40,7 @@ router.patch('/updatePaymentMethod', updatePaymentMethodNumber); // update payme
 
 
 router.get('/showPaymentNumber', showNumber); /// show the number to the users 
+
 router.post('/insertTransaction', transactionSave); // save the transaction data 
 router.get('/transactionReqDopsite', getingTransactionRequestDeposite); // userTransaction Request and send to subadmin  deposite 
 router.get('/transactionReqWith', getingTransactionRequestWithdraw); // usertransaction Request and send to subamdin withdraw 
@@ -52,9 +53,9 @@ router.post('/insertPayInstraction', insertPayInstraction); // payInstraction in
 router.get('/getingPaymentInstraction', getingPayInstraction); // geting instraction to send global way
 
 //  forgot password here
-router.post('/insertSocialMFPF',insertSocialMediaLink); // insert the social link here for password forgot 
+router.put('/insertSocialMFPF',insertSocialMediaLink); // insert the social link here for password forgot 
 router.get('/getSocialMFPF', getingSocialLink); // get the social medial info send to subadmin
-router.get('/getinPassordContact', getingSubAdminSocialLink); // geting socailinfo send to users for contact subadmin
+router.get('/getinPassordContact', getingSubAdminSocialLink); // geting socailinfo send to users for contactsubadmin
 
 // insert Dynamically url
 router.patch('/insertDynamiceUrl', insertDynamiceUrl); // insert dynamically url 
@@ -63,12 +64,13 @@ router.get('/getingDynamicallyUrl', getingDynamicallyUrl); // geting dynamically
 // promotion api make here
 router.post('/promtionOfferinser', promtionOfferinser); // insert the promotion data here
 router.get('/getingPromotininfo', getingPromotinOfferInfo); // geting promotion offer info send admin page
-router.patch('/updatePromotionData', updatePromotionData); // update the promotion 
+router.put('/updatePromotionData', updatePromotionData); // update the promotion 
 router.delete('/deletedPromtion', deletedPromtion); // delete the promotion 
 router.get('/promotionOfferShow', promotionOfferShow); // send to promotion offer title dscription to users
 
 
 // ===================== role validation ===============================
+router.put('/passwordForgotuser', passwordForgotuser); // update the users and admin password 
 router.get('/userValidation', adminUserValidation); // isRoleExite inside the database ( check )
 
 module.exports = router

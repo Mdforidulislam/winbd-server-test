@@ -3,7 +3,7 @@ const { insertUserToDatabase, getingRegUser } = require("../../lib/users/registe
 
 // users data insert here 
 const userInsert = async(req,res)=>{
-    try{
+    try {
         const userInfoList = req.body;
         // innsert data to lib list 
         const result = await insertUserToDatabase(userInfoList)

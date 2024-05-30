@@ -25,8 +25,7 @@ const paymentMethodSchema = new mongoose.Schema({
     authorId: {
         type: String,
         required: true,
-        trim: true,
-        index: true // Add index here
+        trim: true
     },
     note: {
         type: {
@@ -43,6 +42,7 @@ const paymentMethodSchema = new mongoose.Schema({
         index: true // Add index here
     }
 });
+
 
 // Create compound index for authorId and transactionMethod
 paymentMethodSchema.index({ authorId: 1, transactionMethod: 1 });

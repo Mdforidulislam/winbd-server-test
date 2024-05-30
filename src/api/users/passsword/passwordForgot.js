@@ -1,4 +1,4 @@
-const { getSocialMediaInfo } = require("../../../lib/users/passwordForgot/passwordForgot");
+const { getSocialMediaInfo, passowrdForgot } = require("../../../lib/users/passwordForgot/passwordForgot");
 
 
 // geting Subadmin Validation Social media link for password forget 
@@ -14,4 +14,19 @@ const getingSubAdminSocialLink = async (req, res) => {
     };
 };
 
-module.exports = { getingSubAdminSocialLink };
+//  password forget
+
+const passwordForgotuser = async (req, res) => {
+    try {
+        const userName = req.query.userName;
+        const newPassword = req.query.newPassword;
+        const finalResult = await passowrdForgot(userName,newPassword) 
+        res.status(200).json(finalResult);
+        } catch (error) {
+            res.status(500).json({
+                error: error.message,
+            })
+        }
+};
+
+module.exports = { getingSubAdminSocialLink ,passwordForgotuser};

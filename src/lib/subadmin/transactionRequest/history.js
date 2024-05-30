@@ -43,16 +43,15 @@ const transactionHistory = async (authorId, userName, pageNumber , date) => {
             return { message: "Please provide a valid authorId" };
         }
 
-        //  converdata
+        console.log(authorId);
 
-        const dataConvert = formatDateConvert(date); // convert date
-        console.log(dataConvert);
         // Build the search criteria
         let searchCriteria = {};
 
         if (authorId) searchCriteria.authorId = authorId; // Utilizes the index on authorId
         if (userName) searchCriteria.userName = userName; // Utilizes the index on userName
-        if (dataConvert) {
+        if (date) {
+            const dataConvert = formatDateConvert(date); // convert date
             const startDay = parseDateString(dataConvert);
             startDay.setHours(0, 0, 0, 0);
             const endDay = new Date(startDay);
@@ -83,7 +82,7 @@ const transactionHistory = async (authorId, userName, pageNumber , date) => {
             transactionId: item.transactionId,
         }));
 
-        const requestApprovdeData = mappedData.filter(item => item.requestStatus !== 'Processing');
+        const requestApprovdeData = mappedData.filter(item => item.requestStatus !== 'Processing' && item.requestStatus !== 'verify');
 
         return { message: "Successfully received data", requestApprovdeData };
 

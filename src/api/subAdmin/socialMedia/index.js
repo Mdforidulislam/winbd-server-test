@@ -1,4 +1,4 @@
-const { insertSocialMediaContactUsers, getSocialMediaLink } = require("../../../lib/subadmin/SocialMedia");
+const { insertSocialMediaContactUsers, getSocialMediaLink, updateCustomerSocial } = require("../../../lib/subadmin/SocialMedia");
 
 // insert the subadmin social media info
 const insertSocialMediaLink = async (req, res) => {
@@ -27,5 +27,5 @@ const getingSocialLink = async (req, res) => {
 };
 
 
-module.exports = { insertSocialMediaLink ,getingSocialLink };
+module.exports = { insertSocialMediaLink ,getingSocialLink  };
 

@@ -13,7 +13,7 @@ const adminUserValidation = async (req, res) => {
         //  data check if exite database 
                 const isExitedAdmin = await Admin.findOne({$and:[{subAdmin:userName},{password:password}]});
                 const isExiteUser = await UserList.findOne({ $and: [{ userName: userName }, { password: password }] });
-        
+
         //  here are valiation all the users and admin
         if (isExitedAdmin) {
             if (isExitedAdmin?.role === 'admin') {

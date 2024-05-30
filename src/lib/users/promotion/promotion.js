@@ -1,7 +1,7 @@
 const PromotionOffers = require("../../../models/promotion");
 const Transactions = require("../../../models/transactions");
 
-const promotionEffersShow = async (userName = 'foridul') => {
+const promotionEffersShow = async (userName) => {
     try { 
         // Check if the user is new
         const findUsersIsNeworOld = await Transactions.find({ userName: userName });

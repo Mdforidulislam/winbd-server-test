@@ -7,14 +7,15 @@ const transformPromotionData = (input) => {
         description: input.description || '',
         amount: input.amount,
         turnover: input.turnover || '',
-        percentage: input.type === 'percentage' ? input.amount : null,
-        fixedAmount: input.type === 'fixed' ? input.amount : null,
-        allUser: input.userEligibility === 'allUser',
-        newUser: input.userEligibility === 'newUser',
-        allTime: input.timeEligibility === 'allTime',
-        oneTime: input.timeEligibility === 'oneTime'
+        percentage: input.percentage || null,
+        fixedAmount: input.fixedAmount || null,
+        allUser: input.userType === 'allUser',
+        newUser: input.userType === 'newUser',
+        allTime: input.timeType === 'allTime',
+        oneTime: input.timeType === 'oneTime'
     };
 };
+
 
 // Insert the promotion data
 const insertPromotionOffers = async (promotionInfo) => {
@@ -62,7 +63,7 @@ const getingPromotionOfferList = async () => {
 const updatePromotionValue = async (findById,updateInfo) => {
     try {
         // Validate the input data
-        if (!updateInfo  || Object.values(updateInfo).some(item => item === undefined || item === null)) {
+        if (!updateInfo) {
             return { message: "Please provide correct data" };
         }
 

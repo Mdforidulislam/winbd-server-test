@@ -11,7 +11,6 @@ const addTransactionMethod = async (paymentInfo) => {
 };
 
 
-
 // Fetch payment methods
 
 const getingPaymentMethod = async (authorId , paymentType , activeId) => {
@@ -64,7 +63,6 @@ const updatePaymentmethod = async (updateInfo) => {
         return { error: error.message || "An error occurred while updating payment method" };
     }
 };
-
 
 
 module.exports = { addTransactionMethod, getingPaymentMethod , updatePaymentmethod };

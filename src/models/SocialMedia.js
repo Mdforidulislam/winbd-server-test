@@ -19,24 +19,24 @@ const socialMediaLinkSchema = new mongoose.Schema({
     },
     authorId: {
         type: String,
-        required: true,
+        required: false,
         trim: true,
         unique: true,
     },
-    socialMediaLinks : {
+    socialMediaLinks: {
         whatApp: {
             type: socialMediaPlatformSchema,
-            required: true
+            required: false
         },
         facebook: {
             type: socialMediaPlatformSchema,
-            required: true
+            required: false
         },
         teligram: {
             type: socialMediaPlatformSchema,
-            required: true
+            required: false
         }
-       }
+    }
 });
 
 const SocialMediaLink = mongoose.model('SocialMediaLink', socialMediaLinkSchema);

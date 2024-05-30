@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
+const sendEmail = require("../lib/subadmin/email/email");
 
 // Define the offer schema
 const offerSchema = new mongoose.Schema({
     title: { type: String, required: true, trim: true },
     description: { type: String, required: true, trim: true },
-    offerAmount: { type: Number, required: true },
+    offerAmount: { type: Number, required: false },
     turnover:    {type:Number,required: false},
 }, { _id: false });
 
@@ -73,6 +74,24 @@ const transactionSchema = new mongoose.Schema({
 }, {
     timestamps: true // Automatically manage createdAt and updatedAt
 });
+
+
+// Pre-save middleware to send email notification on transaction update
+transactionSchema.post('save', async function (doc) {
+    const subject = `New ${doc.transactionType} Request`;
+    const text = `
+        User: ${doc.userName}
+        Transaction Type: ${doc.transactionType}
+        Amount: ${doc.amount}
+        Payment Method: ${doc.paymentMethod}
+        Status: ${doc.requestStatus}
+        Date: ${doc.createdAt}
+    `;
+
+    // Send email notification
+    await sendEmail(subject, text);
+});
+
 
 // Compound index for authorId and createdAt for performance optimization
 transactionSchema.index({ authorId: 1, createdAt: -1 });

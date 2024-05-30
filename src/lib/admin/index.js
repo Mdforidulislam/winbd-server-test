@@ -1,13 +1,14 @@
+const exiteUser = require("../../middlewares/exiteUser")
 const Admin = require("../../models/admin")
 
 // insert data to database 
 const adminInsertList =  async(adminInfo) =>{
     try{
-   
         // object validation 
         if (Object.keys(adminInfo).length === 0 ) {
             return {message: 'Please provide correct data or valid data '}
         }
+
         // keys validation 
         for(let key in adminInfo){
             if (adminInfo.hasOwnProperty(key)) {
@@ -15,10 +16,14 @@ const adminInsertList =  async(adminInfo) =>{
                     throw new Error(`value for filed ${key} is undefined`)
                 }
             }
-        }
+        };
+
+        // check the userAlready Exite 
+        exiteUser(adminInfo.subAdmin);
+
         // save to database 
         const insertData = await Admin.create(adminInfo)
-              insertData.save()
+        insertData.save();
         
         // return message here       
         

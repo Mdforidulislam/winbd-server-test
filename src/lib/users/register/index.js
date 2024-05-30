@@ -1,3 +1,4 @@
+const exiteUser = require("../../../middlewares/exiteUser");
 const { UserList } = require("../../../models/users");
 
 
@@ -9,6 +10,16 @@ const insertUserToDatabase = async(userInfo) =>{
         if(Object.keys(userInfo).length === 0 || !Object.values(userInfo).every(item => item)){
             return {message:'users data missing filed'}
         }
+        console.log('call api here');
+
+        // Check if the user already exists
+        const exiteUserName = await exiteUser(userInfo.userName); // Await the exiteUser function
+        console.log(exiteUserName);
+        
+        if (exiteUserName.exists) {
+            return { message: 'User already registered' };
+        }
+
         // insert data to databse 
         const userExite = await UserList.findOne({ $or: [{ userName: userInfo.userName }] })
         if (userExite) {
@@ -37,6 +48,7 @@ const getingRegUser = async (userName) => {
         if(userName === '' || !userName){
             return {message:'Please provide correct data'}
         }
+
         // geting data to database 
         const getingUser = await UserList.findOne({ userName: userName }); 
         if(getingUser){

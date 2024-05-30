@@ -1,10 +1,9 @@
+const exiteUser = require("../../middlewares/exiteUser");
 const Admin = require("../../models/admin");
 
 // insert data to databse 
 const insertSubAdmin = async (subAdminInfo) => {
     try {
-
-        console.log('call api', Object.values(subAdminInfo),subAdminInfo,typeof(subAdminInfo.adminName),  typeof(subAdminInfo.uniqueId),typeof(subAdminInfo.password),typeof(subAdminInfo.phoneNumber));
         // object validation subadmininfo
         if (Object.keys(subAdminInfo).length === 0) {
             return { message: 'please provide correct data' }
@@ -15,12 +14,18 @@ const insertSubAdmin = async (subAdminInfo) => {
             }
         }
 
+         // Check if the user already exists
+        const exiteUserName = await exiteUser(subAdminInfo.subAdmin); // Await the exiteUser function
+        if (exiteUserName.exists) {
+                return { message: 'User already registered' };
+         }
 
+        
         // insert data to database 
         if (subAdminInfo) {
-           
+    
             const isExite = await Admin.findOne({ subAdmin: subAdminInfo.subAdmin, uniqueId: subAdminInfo.uniqueId }) // check the validation 
-            console.log(isExite)
+
             if (!isExite) {
                 const reuslt = await Admin.create(subAdminInfo); reuslt.save() // save data to database 
                 if (Object.values(reuslt).length > 0) {
@@ -65,8 +70,6 @@ const subAdminGetTo = async (searchValue, pageNumbers, perPage = 20) => {
             console.log(subAdminUser);
           return { message: 'Successfully getting data', subAdminUser, exiteDataLength };
         }
-
-        
     } catch (error) {
         // Handle errors gracefully
         console.error('Error in subAdminGetTo:', error);

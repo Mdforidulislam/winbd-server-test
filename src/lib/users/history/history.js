@@ -1,12 +1,12 @@
-const Transaction = require("../../../models/transactions")
+const Transactions = require("../../../models/transactions");
 
-// fromData convert the database data time 
+// Helper function to format the date in 'dd/mm/yyyy' format
 const formatDate = (date) => {
     const options = { day: '2-digit', month: 'numeric', year: 'numeric', timeZone: 'Asia/Dhaka' };
     return new Date(date).toLocaleDateString('en-US', options);
 };
 
-// fromData convert the database data time 
+// Helper function to format the time in 'hh:mm AM/PM' format
 const formatTime = (date) => {
     const options = {
         hour: '2-digit',
@@ -17,10 +17,7 @@ const formatTime = (date) => {
     return new Date(date).toLocaleTimeString('en-US', options);
 };
 
-
-
-// query the time rang for data time 
-
+// Helper function to get the start and end date for the given range
 const getStartAndEndDate = (date) => {
     const now = new Date();
     let startDate, endDate;
@@ -50,59 +47,67 @@ const getStartAndEndDate = (date) => {
     return { startDate, endDate };
 };
 
-
-// geing history data list 
-
+// Main function to fetch user history and update status
 const userHistoryUpdateStatus = async (userName, status, paymentType, date = 'Today') => {
+    if (!userName) {
+        return { success: false, message: 'User name is required' };
+    }
+
+    const { startDate, endDate } = getStartAndEndDate(date);
+
+    // Build the search criteria
+    const searchCriteria = {
+        userName: userName,
+        createdAt: { $gte: startDate, $lte: endDate }
+    };
+
+    if (status) {
+        searchCriteria.requestStatus = status;
+    }
+
+    if (paymentType) {
+        searchCriteria.transactionType = paymentType;
+    }
+
     try {
-        if (!userName) {
-            return { success: false, message: 'User name is required' };
-        }
-        const { startDate, endDate } = getStartAndEndDate(date);
+        const transactions = await Transactions.find(searchCriteria);
+        console.log(transactions);
 
-        const searchCriteria = [
-            { userName: userName },
-            { createdAt: { $gte: startDate, $lte: endDate } },
-        ];
-
-        if (status) searchCriteria.push({ requestStatus: status });
-        if (paymentType) searchCriteria.push({ transactionType: paymentType });
-
-        const findSearchResult = await Transaction.find({ $and: searchCriteria });
-
-        if (findSearchResult.length > 0) {
-            const groupredData = findSearchResult.reduce((acc, item) => {
-                const dateKey = formatDate(item.createdAt);
-                if (!acc[dateKey]) {
-                    acc[dateKey] = [];
-                }
-
-                acc[dateKey].push({
-                    transactionType: item.transactionType,
-                    amount: item.amount,
-                    number: item.number,
-                    transactionId: item.transactionId,                      
-                    paymentMethod: item.paymentMethod,
-                    requestStatus: item.requestStatus,
-                    date: formatDate(item.createdAt),
-                    time: formatTime(item.createdAt),
-                    stutusNote: item.stutusNote
-                });
-                return acc;
-
-            }, {});
-
-            const finalResult = Object.keys(groupredData).map(date => ({
-                date,
-                data: groupredData[date]
-            }))
-            
-            console.log(finalResult,'check the final result');
-
-            return { success: true, data: finalResult };
-        } else {
+        if (transactions.length === 0) {
             return { success: false, message: 'No matching records found' };
         }
+
+        const groupedData = transactions.reduce((acc, item) => {
+            const dateKey = formatDate(item.createdAt);
+
+            if (!acc[dateKey]) {
+                acc[dateKey] = [];
+            }
+
+            acc[dateKey].push({
+                transactionType: item.transactionType,
+                amount: item.amount,
+                number: item.number,
+                transactionId: item.transactionId,
+                paymentMethod: item.paymentMethod,
+                requestStatus: item.requestStatus,
+                date: formatDate(item.createdAt),
+                time: formatTime(item.createdAt),
+                statusNote: item.statusNote
+            });
+
+            return acc;
+        }, {});
+
+        const finalResult = Object.keys(groupedData).map(date => ({
+            date,
+            data: groupedData[date]
+        }));
+
+        console.log(finalResult, 'check the final result');
+
+        return { success: true, data: finalResult };
+
     } catch (error) {
         console.error('Error fetching user history:', error);
         return {
@@ -113,7 +118,4 @@ const userHistoryUpdateStatus = async (userName, status, paymentType, date = 'To
     }
 };
 
-
-
-
-module.exports = {userHistoryUpdateStatus}
+module.exports = { userHistoryUpdateStatus };

@@ -8,8 +8,6 @@ const insertTransaction = async (transInfo) => {
             return { message: "Please provide correct data with required fields: transactionType, amount, number, authorId" };
         }
 
-        console.log(transInfo);
-
         // Check if transaction with the same ID already exists
         if (transInfo.transactionType === 'deposit') {
             const isExistDataCheck = await Transaction.findOne({ transactionId: transInfo.transactionId });
@@ -22,7 +20,7 @@ const insertTransaction = async (transInfo) => {
         if (transInfo.offers && transInfo.offers.length > 0) {
             for (const item of transInfo.offers) {
                 const promotionOffer = await PromotionOffers.findOne({ title: item.title });
-                if (promotionOffer && transInfo.amount > promotionOffer.amount) {
+                if (promotionOffer && transInfo.amount >= promotionOffer.amount) {
                     let offerAmount = 0;
                     let turnover = 0;
                     if (promotionOffer.percentage) {

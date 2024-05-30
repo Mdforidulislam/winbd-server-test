@@ -10,7 +10,7 @@ const showNumberlib = async (author, method, userName) => {
         }
 
         // Find payment methods matching authorId and transactionMethod
-        const existingPaymentMethods = await PaymentMethodActive.find({ authorId: author, transactionMethod: method });
+        const existingPaymentMethods = await PaymentMethodActive.find({$and:[{authorId: author},{transactionMethod: method }]});
 
         const exiteUser = await UserList.findOne({ userName: userName }); // Getting user's number 
         

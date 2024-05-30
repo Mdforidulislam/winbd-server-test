@@ -1,49 +1,37 @@
 const SocialMediaLink = require("../../../models/SocialMedia");
 
 
-
 // isnert the socail link here 
 
 const insertSocialMediaContactUsers = async (socialInfo) => {
-    try {
-        // Check if the input object is null or undefined
-        if (!socialInfo || typeof socialInfo !== 'object') {
-            return { message: "Invalid input: socialInfo object is required." };
-        }
+  try {
+      if (!socialInfo || typeof socialInfo !== 'object') {
+          return { message: "Invalid input: socialInfo object is required." };
+      }
 
-        // Destructure the input object
-        const {role, authorId, socialMediaLinks } = socialInfo;
+      const { role, authorId, socialMediaLinks } = socialInfo;
 
-        // Validate the presence of required fields
-        if (!authorId || !socialMediaLinks || Object.keys(socialMediaLinks).length === 0) {
-            return { message: "Invalid input: 'authorId' and at least one social media platform are required." };
-        }
+      if (!authorId || !socialMediaLinks || Object.keys(socialMediaLinks).length === 0) {
+          return { message: "Invalid input: 'authorId' and at least one social media platform are required." };
+      }
 
-        // Validate each social media platform's link
-        for (const platform in socialMediaLinks) {
-            const platformData = socialMediaLinks[platform];
-            const link = platformData.link;
-            if (!link || !/^https?:\/\/.+/.test(link)) {
-                return { message: `Invalid URL for ${platform}: Link URL must be valid.` };
-            }
-        }
+      for (const platform in socialMediaLinks) {
+          const link = socialMediaLinks[platform].link;
+          if (!link || !/^https?:\/\/.+/.test(link)) {
+              return { message: `Invalid URL for ${platform}: Link URL must be valid.` };
+          }
+      }
 
-        // Create a new document using the SocialMediaLink model
-      const newSocialMediaLink = new SocialMediaLink({
-            role,
-            authorId,
-            socialMediaLinks
-        });
+      const updatedDocument = await SocialMediaLink.findOneAndUpdate(
+        { authorId }, // Query to match the document
+        { role, authorId, socialMediaLinks }, // Data to update
+        { new: true, upsert: true, setDefaultsOnInsert: true } // Options
+      );
 
-        // Save the document to the database
-        const savedDocument = await newSocialMediaLink.save();
-
-        // Return the saved document or a success message
-        return { message: "Social media contact user inserted successfully.", data: savedDocument };
-    } catch (error) {
-        // Handle any unexpected errors
-        return { message: "An error occurred during insertion.", error };
-    }
+    return { message: 'Operation successful', data: updatedDocument };
+  } catch (error) {
+      return { message: "An error occurred during insertion.", error };
+  }
 };
 
 
@@ -55,15 +43,27 @@ const getSocialMediaLink = async (authorId) => {
 
       if (!authorId) {
             return { message: "Author ID is required for validation." };
-          }
-        
-      const getSubAdminSocial = await SocialMediaLink.findOne({ authorId }).select('socialMediaLinks imgLink').lean();
-  
-      if (getSubAdminSocial) {
-        return {
-          message: "Successfully retrieved data",
-          data: getSubAdminSocial,
-        };
+      }
+      
+
+          const getSubAdminSocial = await SocialMediaLink.findOne({ authorId }, { _id: 0, socialMediaLinks: 1 }).lean();
+
+          if (getSubAdminSocial) {
+              const { socialMediaLinks } = getSubAdminSocial;
+              const sanitizedSocialMediaLinks = {};
+          
+              // Iterate over socialMediaLinks and remove _id from each platform
+              for (const platform in socialMediaLinks) {
+                  sanitizedSocialMediaLinks[platform] = { link: socialMediaLinks[platform].link };
+              }
+          
+              const responseData = {
+                  message: "Successfully retrieved data",
+                  data: { socialMediaLinks: sanitizedSocialMediaLinks }
+            };
+            return responseData
+
+            
       } else {
         return { message: "Failed to fetch data" };
       }
