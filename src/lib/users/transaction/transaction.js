@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require('uuid');
 const PromotionOffers = require("../../../models/promotion");
 const Transaction = require("../../../models/transactions");
 
@@ -8,12 +9,11 @@ const insertTransaction = async (transInfo) => {
             return { message: "Please provide correct data with required fields: transactionType, amount, number, authorId" };
         }
 
-        // Check if transaction with the same ID already exists
-        if (transInfo.transactionType === 'deposit') {
-            const isExistDataCheck = await Transaction.findOne({ transactionId: transInfo.transactionId });
-            if (isExistDataCheck) {
-                return { message: "Transaction already exists" };
-            }
+       
+
+        // If the transactionType is 'withdraw' and transactionId is not defined, generate a unique ID
+        if (transInfo.transactionType === 'withdraw' && !transInfo.transactionId) {
+            transInfo.transactionId = uuidv4();
         }
 
         //  calculation promotion offer here 
@@ -29,7 +29,7 @@ const insertTransaction = async (transInfo) => {
                         offerAmount = promotionOffer.fixedAmount;
                     }
                     // inlcude the opbiotn value 
-                    turnover = offerAmount * parseInt(promotionOffer.turnover);
+                    turnover = offerAmount + transInfo.amount * parseInt(promotionOffer.turnover);
                     item.offerAmount = offerAmount;
                     item.turnover = turnover;
                 }

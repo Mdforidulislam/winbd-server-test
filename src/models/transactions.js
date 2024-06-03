@@ -29,7 +29,10 @@ const transactionSchema = new mongoose.Schema({
     },
     transactionId: {
         type: String,
-        trim: true
+        trim: true,
+        unique:true,
+        index: true,
+        required: false,
     },
     paymentMethod: {
         type: String,

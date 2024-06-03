@@ -79,7 +79,7 @@ const transactionHistory = async (authorId, userName, pageNumber , date) => {
             stutusNote: item.stutusNote,
             number: item.number,
             paymentMethod: item.paymentMethod,
-            transactionId: item.transactionId,
+            transactionId: item.transactionId
         }));
 
         const requestApprovdeData = mappedData.filter(item => item.requestStatus !== 'Processing' && item.requestStatus !== 'verify');

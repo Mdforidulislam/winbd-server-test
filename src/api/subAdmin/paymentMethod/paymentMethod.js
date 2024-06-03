@@ -10,6 +10,8 @@ const transactionMethod = async (req, res) => {
     }
 }
 
+
+
 // getingPaymentMethod staring
 
 const getingPaymentmethod = async (req, res) => {
@@ -22,6 +24,8 @@ const getingPaymentmethod = async (req, res) => {
         res.status(500).json({error : error.message})
     }
 }
+
+
 
 // update data paymentMehotd
 const updatePaymentMethodNumber = async (req, res) => {

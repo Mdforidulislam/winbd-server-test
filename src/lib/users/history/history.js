@@ -47,13 +47,41 @@ const getStartAndEndDate = (date) => {
     return { startDate, endDate };
 };
 
+// Helper function to convert date and time to a Date object
+const parseDateTime = (date, time) => {
+    const [timePart, meridian] = time.split(' ');
+    const [hours, minutes] = timePart.split(':').map(Number);
+    const adjustedHours = meridian.toUpperCase() === 'PM' ? (hours % 12) + 12 : hours % 12;
+    return new Date(`${date} ${adjustedHours}:${minutes}`);
+};
+
+
 // Main function to fetch user history and update status
-const userHistoryUpdateStatus = async (userName, status, paymentType, date = 'Today') => {
+const userHistoryUpdateStatus = async (userName,searchList) => {
     if (!userName) {
         return { success: false, message: 'User name is required' };
+    };
+
+    const timeFrames = ['Yesterday', 'Today', 'Last 7 days'];
+    const statuses = ['verify', 'Processing', 'Rejected', 'Approved'];
+    const paymentTypes = ['withdraw', 'deposite'];
+
+    let dateRange = 'Today'; // Default date range
+    let status = [];
+    let paymentType = [];
+
+    // Determine the criteria from searchList
+    for (const item of searchList) {
+        if (timeFrames.includes(item)) {
+            dateRange = item;
+        } else if (statuses.includes(item)) {
+            status.push(item);
+        } else if (paymentTypes.includes(item)) {
+            paymentType.push(item);
+        }
     }
 
-    const { startDate, endDate } = getStartAndEndDate(date);
+    const { startDate, endDate } = getStartAndEndDate(dateRange);
 
     // Build the search criteria
     const searchCriteria = {
@@ -61,21 +89,22 @@ const userHistoryUpdateStatus = async (userName, status, paymentType, date = 'To
         createdAt: { $gte: startDate, $lte: endDate }
     };
 
-    if (status) {
-        searchCriteria.requestStatus = status;
+    if (status.length > 0) {
+        searchCriteria.requestStatus = { $in: status };
     }
 
-    if (paymentType) {
-        searchCriteria.transactionType = paymentType;
+    if (paymentType.length > 0) {
+        searchCriteria.transactionType = { $in: paymentType };
     }
+
+
 
     try {
         const transactions = await Transactions.find(searchCriteria);
-        console.log(transactions);
-
         if (transactions.length === 0) {
             return { success: false, message: 'No matching records found' };
         }
+
 
         const groupedData = transactions.reduce((acc, item) => {
             const dateKey = formatDate(item.createdAt);
@@ -99,12 +128,17 @@ const userHistoryUpdateStatus = async (userName, status, paymentType, date = 'To
             return acc;
         }, {});
 
+        console.log(groupedData);
+
+        // Sort each group by time in ascending order
+         for (const dateKey in groupedData) {
+            groupedData[dateKey].sort((a, b) => parseDateTime(b.date, b.time) - parseDateTime(a.date, a.time));
+        }
+
         const finalResult = Object.keys(groupedData).map(date => ({
             date,
             data: groupedData[date]
-        }));
-
-        console.log(finalResult, 'check the final result');
+        })).sort((a, b) => new Date(b.date) - new Date(a.date)); // Ensure the dates themselves are in descending order
 
         return { success: true, data: finalResult };
 

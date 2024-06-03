@@ -21,7 +21,9 @@ const promotionEffersShow = async (userName) => {
                 // New users see new user offers that are not one-time only
                 newUserOffers.push({
                     title: offer.title,
-                    description: offer.description
+                    description: offer.description,
+                    fixtAmount: offer.fixedAmount,
+                    percentTage: offer.percentage
                 });
 
             } else if (!isNewUser && offer.allUser) {
@@ -34,7 +36,9 @@ const promotionEffersShow = async (userName) => {
                         // Add one-time offer if the user hasn't received it yet
                         allUserOffers.push({
                             title: offer.title,
-                            description: offer.description
+                            description: offer.description,
+                            fixtAmount: offer.fixedAmount,
+                            percentTage: offer.percentage
                         });
                     }
                 } else if (offer.allTime) {

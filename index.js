@@ -3,7 +3,8 @@ const connectDB = require('./src/db/connectDB');
 const router = require('./src/routes');
 const globalErrorHandler = require('./src/utils/globalErrorHandler');
 const app = express();
-var bodyParser = require('body-parser')
+const bodyParser = require('body-parser')
+const request = require('request');
 const cors = require('cors');
 const { connectRedis } = require('./src/config/redis');
 const port = process.env.PORT || 5000;
@@ -24,6 +25,15 @@ app.get("/health",(req,res)=>{
     res.send('admin system running ')
 })
 
+// verify token == livechateWebsiteToken123 ( here just add )
+
+
+
+app.use(bodyParser.json()); // Use body-parser middleware to parse JSON requests
+
+
+// Start the Express server and listen on port 1337
+app.listen(1337, () => console.log('webhook is listening'));
 
 app.all('*',(req,res,next)=>{
     const error = new Error(`can't find ${req.originalUrl}on the server`)

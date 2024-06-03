@@ -11,8 +11,8 @@ const addTransactionMethod = async (paymentInfo) => {
     }
 };
 
-// Fetch payment methods
 
+// Fetch payment methods
 // Function to fetch and combine payment methods
 const getingPaymentMethod = async (authorId, paymentType) => {
     try {
@@ -52,6 +52,7 @@ const getingPaymentMethod = async (authorId, paymentType) => {
 // Update or insert a payment method
 const updatePaymentmethod = async (updateInfo) => {
     try {
+        console.log(updateInfo);
         if (!updateInfo || Object.keys(updateInfo).length === 0) {
             return { message: "Please provide valid data" };
         }
@@ -59,22 +60,28 @@ const updatePaymentmethod = async (updateInfo) => {
         // Check if the record exists based on the given criteria
         const query = {
             authorId: updateInfo.authorId,
-            number: updateInfo.number,
-            depositeChannel: updateInfo.depositeChannel,
-            transactionMethod: updateInfo.transactionMethod,
+            idNumber: updateInfo.idNumber
         };
 
-        // If the record exists, update it; otherwise, insert a new record
-        const updatedData = await PaymentMethodActive.findOneAndUpdate(query, updateInfo, { new: true, upsert: true });
+        // Update the record if it exists, or insert a new one if it doesn't
+        const updatedData = await PaymentMethodActive.findOneAndUpdate(
+            query,
+            updateInfo,
+            { new: true, upsert: true }
+        );
 
         return {
             message: "Successfully processed payment method",
             data: updatedData
         };
+
     } catch (error) {
         return { error: error.message || "An error occurred while updating payment method" };
     }
 };
+
+
+
 
 
 module.exports = { addTransactionMethod, getingPaymentMethod , updatePaymentmethod };

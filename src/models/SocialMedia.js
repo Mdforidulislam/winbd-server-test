@@ -39,6 +39,10 @@ const socialMediaLinkSchema = new mongoose.Schema({
         liveChat: {
             type: socialMediaPlatformSchema,
             required: false
+        },
+        email: {
+            type: String,
+            required:false
         }
     }
 });

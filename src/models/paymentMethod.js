@@ -25,6 +25,7 @@ const paymentMethodSchema = new mongoose.Schema({
     authorId: {
         type: String,
         required: true,
+        index: true,
         trim: true
     },
     note: {
@@ -37,7 +38,8 @@ const paymentMethodSchema = new mongoose.Schema({
     },
     idNumber: {
         type: String,
-        required:false
+        required: false,
+        index: true // Add index here
     },
     status: {
         type: String,

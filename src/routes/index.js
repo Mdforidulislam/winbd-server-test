@@ -9,14 +9,13 @@ const { insertSocialMediaLink, getingSocialLink} = require('../api/subAdmin/soci
 const { getingHistoryapi } = require('../api/subAdmin/transactionRquest/history');
 const { getingTransactionRequestDeposite, getingTransactionRequestWithdraw, transactionRequsetFeedbackapi, getingVerifydata } = require('../api/subAdmin/transactionRquest/TransactionRequest');
 const { userInsert, getingUsersData } = require('../api/users');
-const { userHistoryGeting } = require('../api/users/history/userHistory');
 const { getingSubAdminSocialLink, passwordForgotuser } = require('../api/users/passsword/passwordForgot');
 const { promotionOfferShow } = require('../api/users/promotion/promotion');
 const { showNumber } = require('../api/users/showNumber/showNumber');
 const { transactionSave } = require('../api/users/transaction/transaction');
+const { getingWebHook, postWebHook } = require('../chat/liveChat');
+const { userHistoryUpdateStatus } = require('../lib/users/history/history');
 const { adminUserValidation } = require('../middlewares/AdminUsersValidation');
-
-
 
 // ================================= below api call ===========================================
 
@@ -47,7 +46,7 @@ router.get('/transactionReqWith', getingTransactionRequestWithdraw); // usertran
 router.put('/transactionFeedback', transactionRequsetFeedbackapi); // update the transaction requestion 
 router.get('/getingHistory', getingHistoryapi); // this is history send to subadmin not processing data 
 router.get('/getingVerifydata', getingVerifydata); // geting verify data send to subadmin
-router.get('/userHistory', userHistoryGeting); // geting user history send to the users
+router.get('/userHistory', userHistoryUpdateStatus); // geting user history send to the users
 
 router.post('/insertPayInstraction', insertPayInstraction); // payInstraction insert to database 
 router.get('/getingPaymentInstraction', getingPayInstraction); // geting instraction to send global way
@@ -67,6 +66,12 @@ router.get('/getingPromotininfo', getingPromotinOfferInfo); // geting promotion 
 router.put('/updatePromotionData', updatePromotionData); // update the promotion 
 router.delete('/deletedPromtion', deletedPromtion); // delete the promotion 
 router.get('/promotionOfferShow', promotionOfferShow); // send to promotion offer title dscription to users
+
+
+// live chat features add here
+
+router.get('/webhook', getingWebHook); // giting webhook here 
+router.post("/webhook", postWebHook); // post the webhook here 
 
 
 // ===================== role validation ===============================

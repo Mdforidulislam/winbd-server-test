@@ -45,7 +45,8 @@ const transactionRequestDeposite = async (authorId) => {
                     offerAmount: offer?.offerAmount,
                     totalAmount: (Number(item.amount) + Number(offer?.offerAmount)).toFixed(2),
                     oldTurnover: oldTurnover, // Include the old turnover values
-                    newTurnover: Number(newTurnover).toFixed(2) // New turnover value after removing the last element
+                    newTurnover: Number(newTurnover).toFixed(2), // New turnover value after removing the last element,
+                    transactionImage: item.transactionImage,
                 };
             });
 
@@ -136,41 +137,42 @@ const verifyTransactionData = async (authoreId) => {
 
 // transaction request feedback
 
-const transactionRestFeedback = async (id, requestStatus,note = 'waiting for response') => {
+const transactionRestFeedback = async (id, requestStatus, note = 'waiting for response') => {
     try {
-        if (!id || !requestStatus) {
-            return { message: "Please provide valid id and status data for the change request" };
-        }
-        const updateFields = {};
-        if (['Approved', 'verify', 'Rejected'].includes(requestStatus)) {
-            updateFields.requestStatus = requestStatus;
-            updateFields.stutusNote = note;
-        } else {
-            updateFields.transactionId = requestStatus;
-            updateFields.requestStatus = 'payment';
-            updateFields.stutusNote = note;
-        }
-
-        const updatedTransaction = await Transactions.findOneAndUpdate(
-            { _id: id },
-            updateFields,
-            { new: true }
-        );
-
-        if (!updatedTransaction) {
-            return { message: 'Transaction not found' };
-        }
-
-        const responseMessage = updateFields.requestStatus
-            ? 'Request status updated successfully'
-            : 'Transaction ID updated successfully';
-
-        return { message: responseMessage };
-
+      if (!id || !requestStatus) {
+        return { message: "Please provide valid id and status data for the change request" };
+      }
+  
+      const updateFields = {};
+      let responseMessage = '';
+  
+      if (['Approved', 'verify', 'Rejected'].includes(requestStatus)) {
+        updateFields.requestStatus = requestStatus;
+        updateFields.statusNote = note;
+        responseMessage = 'Request status updated successfully';
+      } else {
+        updateFields.transactionId = requestStatus;
+        updateFields.requestStatus = 'success';
+        updateFields.statusNote = note;
+        responseMessage = 'Transaction ID updated successfully';
+      }
+  
+      const updatedTransaction = await Transactions.findOneAndUpdate(
+        { _id: id },
+        updateFields,
+        { new: true }
+      );
+  
+      if (!updatedTransaction) {
+        return { message: 'Transaction not found' };
+      }
+  
+      return { message: responseMessage };
+  
     } catch (error) {
-        return { error: error.message };
+      return { error: error.message };
     }
-};
+  };
 
 
 module.exports = { transactionRequestDeposite, transactionRequestWithdraw , transactionRestFeedback ,verifyTransactionData };
