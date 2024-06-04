@@ -77,8 +77,32 @@ const subAdminGetTo = async (searchValue, pageNumbers, perPage = 20) => {
     }
 };
 
+// geting update the subAdmin info list
+
+const updateSubAdminInfo = async (id, subadmininfo) => {
+    try {
+        console.log(subadmininfo,id);
+        // Find user by ID and update their information
+        const updatedUser = await Admin.findByIdAndUpdate(
+            id, 
+            subadmininfo, 
+            { new: true, runValidators: true } 
+        );
+
+        // Check if the update was successful
+        if (updatedUser) {
+            return { message: "Successfully updated the user", updated: true };
+        } else {
+            return { message: "User not found or update failed", updated: false };
+        }
+    } catch (error) {
+        // Return a detailed error message
+        return { message: "An error occurred while updating the user", error: error.message, updated: false };
+    }
+};
 
 
 
 
-module.exports = { insertSubAdmin, subAdminGetTo }
+
+module.exports = { insertSubAdmin, subAdminGetTo , updateSubAdminInfo}

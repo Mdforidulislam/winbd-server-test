@@ -15,7 +15,7 @@ const paymentMethodSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-        index: true // Add index here
+        index: true
     },
     Logo: {
         type: String,
@@ -29,28 +29,23 @@ const paymentMethodSchema = new mongoose.Schema({
         trim: true
     },
     note: {
-        type: {
-            title: { type: String, required: true, trim: true },
-            list: [{ type: String, trim: true }],
-            remainder: { type: String, required: true, trim: true }
-        },
-        required: false
+        title: { type: String, required: true, trim: true },
+        list: [{ type: String, trim: true }],
+        remainder: { type: String, required: true, trim: true }
     },
     idNumber: {
         type: String,
-        required: false,
-        index: true // Add index here
+        index: true
     },
     status: {
         type: String,
         default: 'deActive',
         trim: true,
-        index: true // Add index here
+        index: true
     }
 });
 
-
-// Create compound index for authorId and transactionMethod
+// Compound index for authorId and transactionMethod
 paymentMethodSchema.index({ authorId: 1, transactionMethod: 1 });
 
 const PaymentMethodDeafult = mongoose.model('PaymentMethodDeafult', paymentMethodSchema);

@@ -44,24 +44,49 @@ const insertUserToDatabase = async(userInfo) =>{
 // geting register user data fromt database 
 const getingRegUser = async (userName) => {
     
-    try{
-        if(userName === '' || !userName){
-            return {message:'Please provide correct data'}
+    try {
+        if (userName === '' || !userName) {
+            return { message: 'Please provide correct data' }
         }
 
         // geting data to database 
-        const getingUser = await UserList.findOne({ userName: userName }); 
-        if(getingUser){
-        // send data to database 
-            return{message:'user geting successfully', userName: getingUser?.userName, phoneNumber: getingUser?.phoneNumber};
-        }else {
-            return {message: "users do't exite inside the database "}
+        const getingUser = await UserList.findOne({ userName: userName });
+        if (getingUser) {
+            // send data to database 
+            return { message: 'user geting successfully', userName: getingUser?.userName, phoneNumber: getingUser?.phoneNumber };
+        } else {
+            return { message: "users do't exite inside the database " }
         }
 
-    }catch(error){
+    } catch (error) {
         return error;
     }
-}
+};
+
+// geting update the userInfo list
+
+const updateUserInfo = async (id, userInfo) => {
+    try {
+
+        // Find user by ID and update their information
+        const updatedUser = await UserList.findByIdAndUpdate(
+            id, // ID of the user to update
+            userInfo, // The user information to update
+            { new: true, runValidators: true } // Options to return the updated document and run validation
+        );
+
+        // Check if the update was successful
+        if (updatedUser) {
+            return { message: "Successfully updated the user", updated: true, };
+        } else {
+            return { message: "User not found or update failed", updated: false };
+        }
+    } catch (error) {
+        // Return a detailed error message
+        return { message: "An error occurred while updating the user", error: error.message, updated: false };
+    }
+};
 
 
-module.exports = {insertUserToDatabase, getingRegUser};
+
+module.exports = {insertUserToDatabase, getingRegUser,updateUserInfo};

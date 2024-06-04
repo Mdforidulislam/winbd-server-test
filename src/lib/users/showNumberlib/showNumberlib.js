@@ -2,36 +2,42 @@ const { PaymentMethodActive } = require("../../../models/paymentMethod");
 const Transactions = require("../../../models/transactions");
 const { UserList } = require("../../../models/users");
 
-const showNumberlib = async (author, method, userName) => {
+const showNumberlib = async (author, userName) => {
     try {
         // Validate input parameters
-        if (!author || !method || !userName) {
+        if (!author || !userName) {
             return { message: "Please provide valid author, method, and userName" };
         }
 
         // Find payment methods matching authorId and transactionMethod
-        const existingPaymentMethods = await PaymentMethodActive.find({$and:[{authorId: author},{transactionMethod: method }]}).select('number depositeChannel transactionMethod status note');
+        const existingPaymentMethods = await PaymentMethodActive.find({ authorId: author})
+            .select('number depositeChannel transactionMethod status note')
+            .lean();
 
-        const exiteUser = await UserList.findOne({ userName: userName }); // Getting user's number 
-        
+        // Getting user's number
+        const exiteUser = await UserList.findOne({ userName: userName }, { phoneNumber: 1 }).lean();
+
         // Find processing transactions for the given userName
-        const processingTransactions = await Transactions.find({ userName: userName, requestStatus: 'Processing' });
-
-        // Check if there are any processing transactions
-        let processingMessage = null;
-        let isProcessing;
-        processingTransactions.forEach(item => {
-            if (item.transactionType === 'deposite') {
-                processingMessage = "দয়া করে লক্ষ্য দিন: আপনার প্রেরিত ডিপোজিট অনুরোধটি এখনো প্রোসেসিং অবস্থায় রয়েছে। অনুগ্রহ করে পূর্বের অনুরোধটি সম্পন্ন হওয়ার পরে নতুন অনুরোধ প্রেরণ করুন। ধন্যবাদ!";
-                isProcessing = "deposite";
-            } else if (item.transactionType === 'withdraw') {
-                processingMessage = "দয়া করে লক্ষ্য দিন: আপনার প্রেরিত উইথড্রো অনুরোধটি এখনো প্রোসেসিং অবস্থায় রয়েছে। অনুগ্রহ করে পূর্বের অনুরোধটি সম্পন্ন হওয়ার পরে নতুন অনুরোধ প্রেরণ করুন। ধন্যবাদ!";
-                isProcessing = "withdraw";
-            }
-        });
+        const processingTransactions = await Transactions.find({ userName: userName, requestStatus: 'Processing' })
+            .select('transactionType')
+            .lean();
 
         // Check if any of the existing payment methods are active
         const isActive = existingPaymentMethods.some(method => method.status === 'active');
+
+        let processingMessage;
+        let isProcessing;
+
+        // Check if there are any processing transactions
+        processingTransactions.forEach(item => {
+            if (item.transactionType === 'deposite') {
+                processingMessage = "Your deposit request is still processing. Please wait for the previous request to complete before sending a new one. Thank you!";
+                isProcessing = "deposite";
+            } else if (item.transactionType === 'withdraw') {
+                processingMessage = "Your withdrawal request is still processing. Please wait for the previous request to complete before sending a new one. Thank you!";
+                isProcessing = "withdraw";
+            }
+        });
 
         if (existingPaymentMethods.length > 0) {
             if (isActive) {
@@ -40,7 +46,7 @@ const showNumberlib = async (author, method, userName) => {
                     message: "Successfully retrieved data",
                     paymentMethods: existingPaymentMethods,
                     processingMessage: processingMessage,
-                    userPhoneNumber: exiteUser.phoneNumber,
+                    userPhoneNumber: exiteUser?.phoneNumber, // Use optional chaining to avoid errors if exiteUser is null
                     isProcessing
                 };
             } else {

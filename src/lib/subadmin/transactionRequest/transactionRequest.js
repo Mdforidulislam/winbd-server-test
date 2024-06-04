@@ -137,7 +137,7 @@ const verifyTransactionData = async (authoreId) => {
 
 // transaction request feedback
 
-const transactionRestFeedback = async (id, requestStatus, note = 'waiting for response') => {
+const transactionRestFeedback = async (id, requestStatus, note = 'waiting for response',transactionId) => {
     try {
       if (!id || !requestStatus) {
         return { message: "Please provide valid id and status data for the change request" };
@@ -151,8 +151,8 @@ const transactionRestFeedback = async (id, requestStatus, note = 'waiting for re
         updateFields.statusNote = note;
         responseMessage = 'Request status updated successfully';
       } else {
-        updateFields.transactionId = requestStatus;
-        updateFields.requestStatus = 'success';
+        updateFields.transactionId = transactionId;
+        updateFields.requestStatus = requestStatus;
         updateFields.statusNote = note;
         responseMessage = 'Transaction ID updated successfully';
       }

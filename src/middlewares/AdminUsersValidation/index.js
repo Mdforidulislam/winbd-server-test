@@ -1,39 +1,42 @@
 const Admin = require("../../models/admin");
 const { UserList } = require("../../models/users");
 
-// athuntication part  , athuntication the users
 const adminUserValidation = async (req, res) => {
-    try {
-                const userName = req.query.userName;
-                const password = req.query.password;
-        // Object and field validation
-        if (userName === '' || password === '') {
-                return res.status(400).json({ message: 'Your field value is missing' });
-        }
-        //  data check if exite database 
-                const isExitedAdmin = await Admin.findOne({$and:[{subAdmin:userName},{password:password}]});
-                const isExiteUser = await UserList.findOne({ $and: [{ userName: userName }, { password: password }] });
+    const { userName, password } = req.query;
 
-        //  here are valiation all the users and admin
-        if (isExitedAdmin) {
-            if (isExitedAdmin?.role === 'admin') {
-                return res.status(200).json({role:isExitedAdmin.role , uniqueId: isExitedAdmin?.uniqueId });
-            } else if (isExitedAdmin?.role === 'subAdmin') {
-                return res.status(200).json({ role:isExitedAdmin.role , uniqueId: isExitedAdmin?.uniqueId });
-            } else {
-                return res.status(200).json({ message: "Don't Match adminName or password"});
-            }
-
-        } else if (isExiteUser?.role === 'user') {
-                return res.status(200).json({ role: isExiteUser?.role , authorId: isExiteUser?.authorId });
-        }
-        else {
-                return res.status(200).json({ message: "Don't Match userNmae or password" });
-        }
-    } catch (error) {
-                return res.status(500).json({ error: error.message });
+    // Validate input fields
+    if (!userName || !password) {
+        return res.status(400).json({ message: 'Missing userName or password' });
     }
-}
 
+    console.log(userName,password);
 
-module.exports = { adminUserValidation }
+    try {
+        // Query admin and user collections in parallel for better performance
+        const [admin, user] = await Promise.all([
+            Admin.findOne({ subAdmin: userName, password }),
+            UserList.findOne({ userName, password })
+        ]);
+
+        // Validate admin credentials
+        if (admin) {
+            if (admin.role === 'admin' || admin.role === 'subAdmin') {
+                return res.status(200).json({ role: admin.role, uniqueId: admin.uniqueId });
+            } else {
+                return res.status(401).json({ message: "Invalid admin role" });
+            }
+        }
+
+        // Validate user credentials
+        if (user) {
+            return res.status(200).json({ role: user.role, authorId: user.authorId });
+        }
+
+        // If no admin or user matched
+        return res.status(401).json({ message: "Invalid userName or password" });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+};
+
+module.exports = { adminUserValidation };

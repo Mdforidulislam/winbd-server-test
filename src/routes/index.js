@@ -1,20 +1,23 @@
 const { adminInsertData, getAdminInfoList } = require('../api/admin');
 const { insertDynamiceUrl, getingDynamicallyUrl } = require('../api/admin/dynamiceUrl/dynamicUrl');
 const { insertPayInstraction, getingPayInstraction } = require('../api/admin/payInstraction');
-const { getingSubAdmin, subAdminInsert } = require('../api/subAdmin');
+const { getingSubAdmin, subAdminInsert, updateAdminInfoAPI, updatesubAdminInfoAPI } = require('../api/subAdmin');
+const { getingSubAdminEmail, updateSubAdminEmail } = require('../api/subAdmin/email/email');
 const { getingUserShowSubAdmin } = require('../api/subAdmin/getUsers/getUsers');
 const { transactionMethod, getingPaymentmethod, updatePaymentMethodNumber } = require('../api/subAdmin/paymentMethod/paymentMethod');
 const { promtionOfferinser, getingPromotinOfferInfo, updatePromotionData, deletedPromtion } = require('../api/subAdmin/promotion/promotion');
 const { insertSocialMediaLink, getingSocialLink} = require('../api/subAdmin/socialMedia');
 const { getingHistoryapi } = require('../api/subAdmin/transactionRquest/history');
 const { getingTransactionRequestDeposite, getingTransactionRequestWithdraw, transactionRequsetFeedbackapi, getingVerifydata } = require('../api/subAdmin/transactionRquest/TransactionRequest');
-const { userInsert, getingUsersData } = require('../api/users');
+const { userInsert, getingUsersData, updateUserInfoAPI } = require('../api/users');
+const { userHistoryGeting } = require('../api/users/history/userHistory');
 const { getingSubAdminSocialLink, passwordForgotuser } = require('../api/users/passsword/passwordForgot');
 const { promotionOfferShow } = require('../api/users/promotion/promotion');
 const { showNumber } = require('../api/users/showNumber/showNumber');
 const { transactionSave } = require('../api/users/transaction/transaction');
 const { getingWebHook, postWebHook } = require('../chat/liveChat');
-const { userHistoryUpdateStatus } = require('../lib/users/history/history');
+const { emailGeting } = require('../lib/subadmin/email/email');
+const { updateUserInfo } = require('../lib/users/register');
 const { adminUserValidation } = require('../middlewares/AdminUsersValidation');
 
 // ================================= below api call ===========================================
@@ -23,13 +26,15 @@ const { adminUserValidation } = require('../middlewares/AdminUsersValidation');
 
 const router = require('express').Router()
 
-router.get('/adminInsert',adminInsertData); // insert data to database 
+router.get('/adminInsert', adminInsertData); // insert data to database 
 router.get('/getingData',getAdminInfoList);  // geting database all the admin data
 
-router.post('/insertSubAdmin',subAdminInsert); // insert data to database 
+router.post('/insertSubAdmin', subAdminInsert); // insert data to database 
+router.put('/updatesubAdminInfoAPI', updatesubAdminInfoAPI); // update the subadmin info here 
 router.get('/getingDataSubAdmin',getingSubAdmin) // geting sub admin 
 
 router.post('/insertUsers', userInsert); // insert users for register 
+router.put('/updateUserInfoAPI', updateUserInfoAPI); // update the userinfo here
 router.get('/getingRegUser', getingUsersData); // geting users data from register 
 router.get('/getinguse', getingUserShowSubAdmin); // show the user to subamdin 
 
@@ -46,7 +51,7 @@ router.get('/transactionReqWith', getingTransactionRequestWithdraw); // usertran
 router.put('/transactionFeedback', transactionRequsetFeedbackapi); // update the transaction requestion 
 router.get('/getingHistory', getingHistoryapi); // this is history send to subadmin not processing data 
 router.get('/getingVerifydata', getingVerifydata); // geting verify data send to subadmin
-router.get('/userHistory', userHistoryUpdateStatus); // geting user history send to the users
+router.get('/userHistory', userHistoryGeting); // geting user history send to the users
 
 router.post('/insertPayInstraction', insertPayInstraction); // payInstraction insert to database 
 router.get('/getingPaymentInstraction', getingPayInstraction); // geting instraction to send global way
@@ -66,6 +71,11 @@ router.get('/getingPromotininfo', getingPromotinOfferInfo); // geting promotion 
 router.put('/updatePromotionData', updatePromotionData); // update the promotion 
 router.delete('/deletedPromtion', deletedPromtion); // delete the promotion 
 router.get('/promotionOfferShow', promotionOfferShow); // send to promotion offer title dscription to users
+
+
+// email features here
+router.get("/getingSubAdminEmail", getingSubAdminEmail); // geting email from database send to subAdmin
+router.put("/updateSubAdminEmail",updateSubAdminEmail ); // updateEmail from the subAdmin 
 
 
 // live chat features add here

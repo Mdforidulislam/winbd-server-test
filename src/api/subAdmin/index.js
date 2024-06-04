@@ -1,4 +1,4 @@
-const { insertSubAdmin, subAdminGetTo } = require("../../lib/subadmin");
+const { insertSubAdmin, subAdminGetTo, updateSubAdminInfo } = require("../../lib/subadmin");
 
 // subadmin data insert
 const subAdminInsert = async (req, res) => {
@@ -23,4 +23,19 @@ const getingSubAdmin = async (req, res) => {
   }
 };
 
-module.exports = { subAdminInsert, getingSubAdmin };
+// update subadmin here
+const updatesubAdminInfoAPI = async (req, res) => {
+  try { 
+    const id = req.query.id;
+    const subadminfo = req.body;
+      if (!id || !Object.values(subadminfo).every(item => item)) {
+          message: "userInfo or Id missing";
+      };
+      const finalResult = await updateSubAdminInfo(id, subadminfo); // call the libray funtion for updatate userinfo 
+      res.status(200).json(finalResult);
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { subAdminInsert, getingSubAdmin,updatesubAdminInfoAPI };

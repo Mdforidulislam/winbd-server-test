@@ -32,8 +32,6 @@ app.get("/health",(req,res)=>{
 app.use(bodyParser.json()); // Use body-parser middleware to parse JSON requests
 
 
-// Start the Express server and listen on port 1337
-app.listen(1337, () => console.log('webhook is listening'));
 
 app.all('*',(req,res,next)=>{
     const error = new Error(`can't find ${req.originalUrl}on the server`)

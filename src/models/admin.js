@@ -10,7 +10,8 @@ const adminSchema = new mongoose.Schema({
     subAdmin:{
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        index: true
     },
     phoneNumber: {
         type: String,
@@ -18,7 +19,8 @@ const adminSchema = new mongoose.Schema({
     },
     password: {
         type : String,
-        required: true
+        required: true,
+        index: true,
     },
     role: {
         type: String,
