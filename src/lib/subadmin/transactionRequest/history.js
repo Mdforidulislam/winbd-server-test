@@ -50,6 +50,7 @@ const transactionHistory = async (authorId, userName, pageNumber , date) => {
 
         if (authorId) searchCriteria.authorId = authorId; // Utilizes the index on authorId
         if (userName) searchCriteria.userName = userName; // Utilizes the index on userName
+        if (userName) searchCriteria.transactionId = userName; // search transaction value 
         if (date) {
             const dataConvert = formatDateConvert(date); // convert date
             const startDay = parseDateString(dataConvert);
@@ -63,8 +64,10 @@ const transactionHistory = async (authorId, userName, pageNumber , date) => {
         }
 
         // Query the database
-        const userHistory = await Transactions.find(searchCriteria).skip(30  * pageNumber).limit(parseInt(30)).lean();
-
+        const userHistory = await Transactions.find(searchCriteria).skip(50 * pageNumber).limit(parseInt(50)).lean();
+        // pagination here
+        const transactionHsitoryLenght = await Transactions.find({ authorId: authorId }).countDocuments().lean();
+        const showPageNumber = Math.ceil(transactionHsitoryLenght / 50);
         if (!userHistory || userHistory.length === 0) {
             return { message: "No data found" };
         }
@@ -82,9 +85,10 @@ const transactionHistory = async (authorId, userName, pageNumber , date) => {
             transactionId: item.transactionId
         }));
 
+       
         const requestApprovdeData = mappedData.filter(item => item.requestStatus !== 'Processing' && item.requestStatus !== 'verify');
 
-        return { message: "Successfully received data", requestApprovdeData };
+        return { message: "Successfully received data", requestApprovdeData ,showPageNumber };
 
     } catch (error) {
         console.error(error);

@@ -6,59 +6,56 @@ const showNumberlib = async (author, userName) => {
     try {
         // Validate input parameters
         if (!author || !userName) {
-            return { message: "Please provide valid author, method, and userName" };
+            return { message: "Please provide valid author and userName" };
         }
 
-        // Find payment methods matching authorId and transactionMethod
-        const existingPaymentMethods = await PaymentMethodActive.find({ authorId: author})
+        // Fetch active payment methods for the author
+        const activePaymentMethods = await PaymentMethodActive.find({ authorId: author, status: 'active' })
             .select('number depositeChannel transactionMethod status note')
             .lean();
 
-        // Getting user's number
-        const exiteUser = await UserList.findOne({ userName: userName }, { phoneNumber: 1 }).lean();
+        // Get the user's phone number
+        const user = await UserList.findOne({ userName: userName }, { phoneNumber: 1 }).lean();
 
-        // Find processing transactions for the given userName
+        // Fetch processing transactions for the user
         const processingTransactions = await Transactions.find({ userName: userName, requestStatus: 'Processing' })
             .select('transactionType')
             .lean();
 
-        // Check if any of the existing payment methods are active
-        const isActive = existingPaymentMethods.some(method => method.status === 'active');
+        // Determine processing message and status
+        let processingMessage = null;
+        let isProcessing = null;
 
-        let processingMessage;
-        let isProcessing;
-
-        // Check if there are any processing transactions
-        processingTransactions.forEach(item => {
-            if (item.transactionType === 'deposite') {
+        processingTransactions.forEach(transaction => {
+            if (transaction.transactionType === 'deposite') {
                 processingMessage = "Your deposit request is still processing. Please wait for the previous request to complete before sending a new one. Thank you!";
                 isProcessing = "deposite";
-            } else if (item.transactionType === 'withdraw') {
+            } else if (transaction.transactionType === 'withdraw') {
                 processingMessage = "Your withdrawal request is still processing. Please wait for the previous request to complete before sending a new one. Thank you!";
                 isProcessing = "withdraw";
             }
         });
 
-        if (existingPaymentMethods.length > 0) {
-            if (isActive) {
-                // Return existing payment methods and processing status
-                return {
-                    message: "Successfully retrieved data",
-                    paymentMethods: existingPaymentMethods,
-                    processingMessage: processingMessage,
-                    userPhoneNumber: exiteUser?.phoneNumber, // Use optional chaining to avoid errors if exiteUser is null
-                    isProcessing
-                };
-            } else {
-                return { message: "No active payment methods found", processingMessage: processingMessage };
-            }
+        // Check if there are active payment methods
+        if (activePaymentMethods.length > 0) {
+            return {
+                message: "Successfully retrieved data",
+                paymentMethods: activePaymentMethods,
+                processingMessage,
+                userPhoneNumber: user?.phoneNumber,
+                isProcessing
+            };
         } else {
-            return { message: "Payment methods not found", processingMessage: processingMessage };
+            return {
+                message: "No active payment methods found",
+                processingMessage,
+                userPhoneNumber: user?.phoneNumber
+            };
         }
 
     } catch (error) {
         return { error: "An error occurred while fetching payment methods", details: error.message };
     }
-}
+};
 
 module.exports = { showNumberlib };

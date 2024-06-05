@@ -3,7 +3,7 @@ const { insertDynamiceUrl, getingDynamicallyUrl } = require('../api/admin/dynami
 const { insertPayInstraction, getingPayInstraction } = require('../api/admin/payInstraction');
 const { getingSubAdmin, subAdminInsert, updateAdminInfoAPI, updatesubAdminInfoAPI } = require('../api/subAdmin');
 const { getingSubAdminEmail, updateSubAdminEmail } = require('../api/subAdmin/email/email');
-const { getingUserShowSubAdmin } = require('../api/subAdmin/getUsers/getUsers');
+const { getingUserShowSubAdmin, getingUserCountList } = require('../api/subAdmin/getUsers/getUsers');
 const { transactionMethod, getingPaymentmethod, updatePaymentMethodNumber } = require('../api/subAdmin/paymentMethod/paymentMethod');
 const { promtionOfferinser, getingPromotinOfferInfo, updatePromotionData, deletedPromtion } = require('../api/subAdmin/promotion/promotion');
 const { insertSocialMediaLink, getingSocialLink} = require('../api/subAdmin/socialMedia');
@@ -31,7 +31,9 @@ router.get('/getingData',getAdminInfoList);  // geting database all the admin da
 
 router.post('/insertSubAdmin', subAdminInsert); // insert data to database 
 router.put('/updatesubAdminInfoAPI', updatesubAdminInfoAPI); // update the subadmin info here 
-router.get('/getingDataSubAdmin',getingSubAdmin) // geting sub admin 
+router.get('/getingDataSubAdmin', getingSubAdmin) // geting sub admin 
+router.get('/getingUserCountList', getingUserCountList); // geting  user Register lenght 
+
 
 router.post('/insertUsers', userInsert); // insert users for register 
 router.put('/updateUserInfoAPI', updateUserInfoAPI); // update the userinfo here
