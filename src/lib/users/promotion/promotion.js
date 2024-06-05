@@ -45,7 +45,9 @@ const promotionEffersShow = async (userName) => {
                     // Add all-time offers
                     allUserOffers.push({
                         title: offer.title,
-                        description: offer.description
+                        description: offer.description,
+                        fixtAmount: offer.fixedAmount,
+                        percentTage: offer.percentage
                     });
                 }
             }
