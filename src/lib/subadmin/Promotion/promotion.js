@@ -1,4 +1,5 @@
 const PromotionOffers = require("../../../models/promotion");
+const PromotionOffersSave = require("../../../models/promotionsave");
 
 // Convert data
 const transformPromotionData = (input) => {
@@ -112,5 +113,23 @@ const deletePromotionOffers = async (id) => {
 };
 
 
+// deleted turnover
 
-module.exports = { insertPromotionOffers , getingPromotionOfferList , updatePromotionValue , deletePromotionOffers };
+const deletedTurnoverSave = async (id) => {
+    try {
+        const deletedTurnoverSave = await PromotionOffersSave.findByIdAndDelete(id);
+        
+        if (!deletedTurnoverSave) {
+            return { message: "Something went wrong, data not deleted" };
+        }
+        
+        return { message: "Successfully deleted the turnover" };
+    } catch (error) {
+        console.error('Error deleting turnover:', error); // Logging the error
+        return { message: "An error occurred", error: error.message };
+    }
+};
+
+
+
+module.exports = { insertPromotionOffers , getingPromotionOfferList , updatePromotionValue , deletePromotionOffers , deletedTurnoverSave };

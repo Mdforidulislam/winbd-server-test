@@ -8,9 +8,8 @@ const insertUserToDatabase = async(userInfo) =>{
     try{
        // object validation list here 
         if(Object.keys(userInfo).length === 0 || !Object.values(userInfo).every(item => item)){
-            return {message:'users data missing filed'}
+            return { message: 'users data missing filed' };
         }
-        console.log('call api here');
 
         // Check if the user already exists
         const exiteUserName = await exiteUser(userInfo.userName); // Await the exiteUser function
@@ -23,18 +22,20 @@ const insertUserToDatabase = async(userInfo) =>{
         // insert data to databse 
         const userExite = await UserList.findOne({ $or: [{ userName: userInfo.userName }] })
         if (userExite) {
-            return {message: "user Already register"}
+            return { message: "user Already register" };
         }
         const insertData = await UserList.create(userInfo); insertData.save(); // save the to database 
         // send a message to dabase 
         if(insertData){
-            return {message:'data insert Successfully to database'}
+            return { message: 'data insert Successfully to database' };
         }else{
-            return {message:'somthing wrong here'}
+            return { message: 'somthing wrong here' };
         }
 
     }catch(error){
-        return error;
+        if(error.code === '11000'){
+            return { message: "number allready or userName already exite to database", error };
+        }
     }
 }
 
@@ -83,7 +84,7 @@ const updateUserInfo = async (id, userInfo) => {
         }
     } catch (error) {
         // Return a detailed error message
-        return { message: "An error occurred while updating the user", error: error.message, updated: false };
+        return error;
     }
 };
 

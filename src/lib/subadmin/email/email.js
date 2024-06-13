@@ -47,8 +47,8 @@ const emailGetingFromSubAdmin = async (authorId, infoSubAdmin) => {
 
 const sendEmail = async (subject, text, email) => {
 
-    const   EMAIL_USER =  "ekpoysarferiwayala@gmail.com"
-    const   EMAIL_PASS = "ukhipebjnqtlynsl"
+    const   EMAIL_USER =  "winbdt.payment@gmail.com"
+    const   EMAIL_PASS = "jyfdszlleqrfhxum"
     const SUBADMIN_EMAIL = email;
 
     const transporter = nodemailer.createTransport({

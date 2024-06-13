@@ -29,9 +29,11 @@ const promotionEffersShow = async (userName) => {
             } else if (!isNewUser && offer.allUser) {
                 // All users can see all user offers
                 if (offer.oneTime) {
+
                     const hasReceivedOffer = findUsersIsNeworOld.some(transaction => 
-                        transaction.offers.some(o => o.title === offer.title)
+                        Array.isArray(transaction.offers) && transaction.offers.some(o => o.title === offer.title)
                     );
+                    
                     if (!hasReceivedOffer) {
                         // Add one-time offer if the user hasn't received it yet
                         allUserOffers.push({

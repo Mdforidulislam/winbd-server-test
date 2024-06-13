@@ -3,7 +3,6 @@ const { getUsersLibray, getingRegisterUserCount } = require("../../../lib/subadm
 
 const getingUserShowSubAdmin = async (req, res) => {
     try {
-        console.log('call the api');
         const uniqueId = req.query.uniqueId;
         const searchValue = req.query.searchValue;
         const pageNumbers = req.query.pageNumber;

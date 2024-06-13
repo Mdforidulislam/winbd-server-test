@@ -4,35 +4,26 @@ const SocialMediaLink = require("../../../models/SocialMedia");
 // isnert the socail link here 
 const insertSocialMediaContactUsers = async (socialInfo) => {
   try {
-      if (!socialInfo || typeof socialInfo !== 'object') {
-          return { message: "Invalid input: socialInfo object is required." };
-    };
+    if (!socialInfo || typeof socialInfo !== 'object') {
+      return { message: "Invalid input: socialInfo object is required." };
+    }
 
     const { role, authorId, socialMediaLinks } = socialInfo;
 
     if (!authorId || !socialMediaLinks || Object.keys(socialMediaLinks).length === 0) {
-          return { message: "Invalid input: 'authorId' and at least one social media platform are required." };
-    };
-
-    if (!socialMediaLinks.email && Object.values(socialMediaLinks).includes('whatApp','facebook','teligram','liveChat')) {
-      for (const platform in socialMediaLinks) {
-        const link = socialMediaLinks[platform].link;
-        const email = socialMediaLinks[platform];
-            if (!link || !/^https?:\/\/.+/.test(link)) {
-                return { message: `Invalid URL for ${platform}: Link URL must be valid.` };
-            }
-      };
+      return { message: "Invalid input: 'authorId' and at least one social media platform are required." };
     }
 
     const updatedDocument = await SocialMediaLink.findOneAndUpdate(
-        { authorId }, // Query to match the document
-        { role, authorId, socialMediaLinks }, // Data to update
-        { new: true, upsert: true, setDefaultsOnInsert: true } // Options
+      { authorId }, // Query to match the document
+      { role, authorId, socialMediaLinks }, // Data to update
+      { new: true, upsert: true, setDefaultsOnInsert: true } // Options
     );
 
     return { message: 'Operation successful', data: updatedDocument };
   } catch (error) {
-      return { message: "An error occurred during insertion.", error };
+    console.error("Error during insertion:", error);
+    return { message: "An error occurred during insertion.", error };
   }
 };
 

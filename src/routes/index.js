@@ -5,7 +5,7 @@ const { getingSubAdmin, subAdminInsert, updateAdminInfoAPI, updatesubAdminInfoAP
 const { getingSubAdminEmail, updateSubAdminEmail } = require('../api/subAdmin/email/email');
 const { getingUserShowSubAdmin, getingUserCountList } = require('../api/subAdmin/getUsers/getUsers');
 const { transactionMethod, getingPaymentmethod, updatePaymentMethodNumber } = require('../api/subAdmin/paymentMethod/paymentMethod');
-const { promtionOfferinser, getingPromotinOfferInfo, updatePromotionData, deletedPromtion } = require('../api/subAdmin/promotion/promotion');
+const { promtionOfferinser, getingPromotinOfferInfo, updatePromotionData, deletedPromtion, promotionTurnoverDeleted } = require('../api/subAdmin/promotion/promotion');
 const { insertSocialMediaLink, getingSocialLink} = require('../api/subAdmin/socialMedia');
 const { getingHistoryapi } = require('../api/subAdmin/transactionRquest/history');
 const { getingTransactionRequestDeposite, getingTransactionRequestWithdraw, transactionRequsetFeedbackapi, getingVerifydata } = require('../api/subAdmin/transactionRquest/TransactionRequest');
@@ -44,9 +44,7 @@ router.post('/addTransaction', transactionMethod); // add a transaction method
 router.get('/getingPaymentmethod', getingPaymentmethod); // geting payment method
 router.patch('/updatePaymentMethod', updatePaymentMethodNumber); // update payment method
 
-
 router.get('/showPaymentNumber', showNumber); /// show the number to the users 
-
 router.post('/insertTransaction', transactionSave); // save the transaction data 
 router.get('/transactionReqDopsite', getingTransactionRequestDeposite); // userTransaction Request and send to subadmin  deposite 
 router.get('/transactionReqWith', getingTransactionRequestWithdraw); // usertransaction Request and send to subamdin withdraw 
@@ -73,6 +71,7 @@ router.get('/getingPromotininfo', getingPromotinOfferInfo); // geting promotion 
 router.put('/updatePromotionData', updatePromotionData); // update the promotion 
 router.delete('/deletedPromtion', deletedPromtion); // delete the promotion 
 router.get('/promotionOfferShow', promotionOfferShow); // send to promotion offer title dscription to users
+router.delete('/turnoverdeleted', promotionTurnoverDeleted); // delted the promotion turnover data from subadmin reqquest withdraw and deposite
 
 
 // email features here

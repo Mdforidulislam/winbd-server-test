@@ -14,7 +14,8 @@ const UsersSchema = new mongoose.Schema({
     },
     phoneNumber: {
         type: String, 
-        required: true
+        required: true,
+        unique: true,
     },
     authorId: {
         type: String,

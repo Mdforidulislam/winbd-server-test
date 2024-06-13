@@ -1,59 +1,55 @@
 const { UserList } = require("../../../models/users");
 
+
+
 // geting user infomation show data to the subadmin page 
-const getUsersLibray = async (uniqueId, searchValue, pageNumbers, perPage = 20) => {
+const getUsersLibray = async (uniqueId, searchValue, pageNumbers, perPage = 50) => {
+    console.log(searchValue);
     try {
-        // Validate input parameters
         if (!uniqueId) {
             return { message: "Please provide unique Id" };
         }
 
-        // Calculate the number of documents to skip
-        const skipCount = pageNumbers * perPage;
+        console.log(`Unique ID: ${uniqueId}, Search Value: ${searchValue}, Page Number: ${pageNumbers}`);
 
-        // Build the query condition
-        const queryCondition = {
-            authorId: uniqueId,
-            ...(searchValue && { userName: { $regex: searchValue, $options: 'i' } }) // Case-insensitive search
+        console.log(perPage * pageNumbers);
+
+        // search sriteria below
+        const queryCondition = { authorId: uniqueId, };
+        if (searchValue) {
+            const searchRegex = new RegExp(searchValue, 'i');
+            queryCondition.$or = [
+                { phoneNumber: { $regex: searchRegex } },
+                { userName: { $regex: searchRegex } }
+            ]
         };
 
-        // Fetch the user data
-        const queryUserInfo = await UserList.find(queryCondition)
-            .skip(skipCount)
-            .limit(perPage)
-            .exec();
+        
+        const [userInfo,totalLength] = await Promise.all([
+            UserList.find(queryCondition)
+                .sort({ _id: 1 })  // Sort by _id in ascending order
+                .skip(perPage * pageNumbers)
+                .limit(perPage),
+            UserList.countDocuments(queryCondition),
+        ]);
 
-        // Return the user data
-        if (queryUserInfo.length > 0) {
-            return { message: "Successfully fetched user data", queryUserInfo };
-        } else {
-            return { message: "No users found matching the criteria" };
-        }
+        //  don't exite data inside the database here 
+        if (userInfo.length === 0) {
+            return { message: "don't match data inside the database" };
+        };
 
+        //  calculation the page
+        const totalPages = Math.ceil(totalLength / perPage);
+
+
+        return { success: true, userInfo, totalPages };
+        
     } catch (error) {
         console.error('Error fetching user data:', error);
-        return { message: "An error occurred while fetching user data", error };
+        return { message: "An error occurred while fetching user data", error: error.message };
     }
 };
 
-
-
-// geting Count Register user
-
-const getingRegisterUserCount = async (authoredId) => {
-    try {
-        const getingReigsterUserList = await UserList.find({ authorId: authoredId }).countDocuments().lean();
-        const getingCounterUser = Math.ceil(getingReigsterUserList / 20);
-        if (getingCounterUser) {
-            return getingCounterUser;
-        } else {
-            return { message: "Register user count is problems" };
-        };
-     } catch (error) {
-        return error;
-    }
-};
-
-module.exports = { getUsersLibray ,getingRegisterUserCount};
+module.exports = { getUsersLibray };
 
 

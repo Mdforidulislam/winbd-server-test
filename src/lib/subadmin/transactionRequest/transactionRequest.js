@@ -1,20 +1,33 @@
+const PromotionOffersSave = require("../../../models/promotionsave");
 const Transactions = require("../../../models/transactions");
 
 
 
 const formatTime = (date) => {
-    const options = { hour: '2-digit', minute: '2-digit', hour12: true };
+    // Create options object for formatting time
+    const options = {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+        timeZone: 'Asia/Dhaka'
+    };
+
+    // Format the date to a time string based on the Bangladesh timezone
     const formattedTime = new Date(date).toLocaleTimeString('en-US', options);
+
+    // Split the formatted time into time and period (AM/PM)
     const [time, period] = formattedTime.split(' ');
+
     return time.replace(':', '.') + ' ' + period;
 };
+//  time formate here 
+
 const formatDate = (date) => {
     const options = { day: '2-digit', month: 'numeric', year: 'numeric', timeZone: 'Asia/Dhaka' };
     return new Date(date).toLocaleDateString('en-US', options);
 };
 
-
-// geting deposite data with query 
+//  transaction request deposite
 const transactionRequestDeposite = async (authorId) => {
     try {
         if (!authorId) {
@@ -26,31 +39,53 @@ const transactionRequestDeposite = async (authorId) => {
             return { message: "No payment method request inside the database." };
         }
 
-        const queryDepositeData = matchAuthorData.filter(item => item.transactionType === 'deposite' && item.requestStatus === 'Processing').map(item => {
-                const offer = item.offers[0];
-                const oldTurnover = Array?.isArray(offer?.turnover) ? [...offer?.turnover] : [offer?.turnover];
-                const newTurnover = oldTurnover?.pop(); // Remove the last element
+        // Fetch old turnover records
+        const oldTurnover = await PromotionOffersSave.find({ authorId: authorId })
+        .select('_id turnover offerAmount title')
+        .lean();
+    
+        // Pop the most recent turnover record
+        const newTurnover = oldTurnover.pop();
+        const offerAmount = newTurnover ? newTurnover.offerAmount : 0;
+        
+        // Filter and map the deposit data with "Processing" status
+        const queryDepositeData = matchAuthorData
+            .filter(item => item.transactionType === 'deposite' && item.requestStatus === 'Processing')
+            .map(item => {
+
+                const totalAmount = item.amount + offerAmount;
 
                 return {
                     _id: item._id,
                     userName: item.userName,
                     transactionId: item.transactionId,
                     amount: item.amount,
-                    number: item.number,
+                    userNumber: item.userNumber,
+                    authoreNumber: item.authoreNumber,
                     paymentMethod: item.paymentMethod,
                     transactionType: item.transactionType,
                     paymentChannel: item.paymentChannel,
                     TimeDay: formatTime(item.createdAt),
                     statusNote: item.statusNote,
-                    offerAmount: offer?.offerAmount,
-                    totalAmount: (Number(item.amount) + Number(offer?.offerAmount)).toFixed(2),
-                    oldTurnover: oldTurnover, // Include the old turnover values
-                    newTurnover: Number(newTurnover).toFixed(2), // New turnover value after removing the last element,
                     transactionImage: item.transactionImage,
+                    offerAmount,
+                    totalAmount
+
                 };
             });
 
-        return { message: "Successfully retrieved payment request information", queryDepositeData };
+        // Check if there are any processing deposit transactions
+        const isDepositeProcessing = queryDepositeData.length > 0;
+
+        if (isDepositeProcessing) {
+
+            return {
+                message: "Successfully retrieved payment request information",
+                queryDepositeData,
+                oldTurnover,
+                newTurnover
+            };
+        }
     } catch (error) {
         console.error("Error retrieving deposit data:", error);
         return { message: "An error occurred while retrieving deposit data.", error };
@@ -72,33 +107,49 @@ const transactionRequestWithdraw = async (authorId) => {
             return { message: "No payment method request inside the database." };
         }
 
+        // Filter for withdraw transactions with "Processing" status
         const queryWithDrawData = matchAuthorData
             .filter(item => item.transactionType === 'withdraw' && item.requestStatus === 'Processing')
             .map(item => {
-                const totalTurnover = item.offers?.reduce((current, offer) => current + offer?.turnover, 0);
-
                 return {
                     _id: item._id,
                     userName: item.userName,
                     transactionType: item.transactionType,
                     amount: item.amount,
-                    number: item.number,
+                    userNumber: item.userNumber,
+                    authoreNumber: item.authoreNumber,
                     paymentMethod: item.paymentMethod,
                     paymentChannel: item.paymentChannel,
                     todayTime: formatTime(item.createdAt),
                     TimeDay: formatDate(item.createdAt),
                     statusNote: item.statusNote,
-                    totalTurnover: totalTurnover.toFixed(2),
                 };
             });
 
-        return { message: "Successfully retrieved payment request information", queryWithDrawData };
+        // Fetch old turnover records
+        const turnoverList = await PromotionOffersSave.find({ authorId: authorId })
+        .select('_id turnover offerAmount title')
+        .lean();
+    
+        // Calculate the total turnover amount
+        const totalTurnover = turnoverList.reduce((acc, item) => acc + item.turnover, 0);
+
+        // Return the response with withdraw data and turnover information
+        if (queryWithDrawData.length > 0) {
+            return {
+                message: "Successfully retrieved payment request information",
+                queryWithDrawData,
+                totalTurnover,
+                turnoverList
+            };
+        }
+
+
     } catch (error) {
         console.error("Error retrieving withdraw data:", error);
         return { message: "An error occurred while retrieving withdraw data.", error };
     }
 };
-
 
 // geting veryfied transaction data here
 
@@ -113,15 +164,18 @@ const verifyTransactionData = async (authoreId) => {
         if (verifyTransactionDat) {
             const queryVerifyData = verifyTransactionDat.filter((item) =>  item.requestStatus === 'verify').map(item => ({
                 _id: item._id,
-                userName: item.userName,
-                transactionType: item.transactionType,
-                amount: item.amount,
-                number: item.number,
-                paymentMethod: item.paymentMethod,
+                userName: item?.userName,
+                transactionType: item?.transactionType,
+                amount: item?.amount,
+                userNumber: item.userNumber,
+                authoreNumber: item.authoreNumber,
+                paymentMethod: item?.paymentMethod,
                 todayTime: formatTime(item.createdAt),
                 paymentChannel: item.paymentChannel,
                 TimeDay: formatTime(item.createdAt),
-                stutusNote: item.stutusNote,
+                requestStatus: item?.requestStatus,
+                transactionId: item?.transactionId,
+                transactionImage: item.transactionImage,
             }));
             return { message: "successfully geting payment Request Infomation", queryVerifyData };
             

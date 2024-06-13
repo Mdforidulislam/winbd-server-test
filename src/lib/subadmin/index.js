@@ -37,7 +37,7 @@ const insertSubAdmin = async (subAdminInfo) => {
         }
 
     } catch (error) {
-        return error
+        if (error.code === '11000') return { message: 'Phone Number allredy  exite', error };
     }
 }
 

@@ -1,4 +1,4 @@
-const { insertPromotionOffers, updatePromotionValue, deletePromotionOffers, getingPromotionOfferList } = require("../../../lib/subadmin/Promotion/promotion");
+const { insertPromotionOffers, updatePromotionValue, deletePromotionOffers, getingPromotionOfferList, deletedTurnoverSave } = require("../../../lib/subadmin/Promotion/promotion");
 
 
 // Insert promotion offer data here
@@ -54,10 +54,27 @@ const deletedPromtion = async (req, res) => {
 
 
 
+// deleted the turnover
+
+const promotionTurnoverDeleted = async (req, res) => {
+    try {
+        const id = req.query.id;
+        if (!id) {
+            return { message: "please provide currect id" };
+        }
+        const finalResult = await deletedTurnoverSave(id); // call the api funtion
+        res.status(200).json(finalResult);
+     } catch (error) {
+        res.status(500).json({
+            error: error.message,
+        })
+    }
+};
 
 
 
 
-module.exports = { promtionOfferinser , getingPromotinOfferInfo ,updatePromotionData , deletedPromtion };
+
+module.exports = { promtionOfferinser , getingPromotinOfferInfo ,updatePromotionData , deletedPromtion ,promotionTurnoverDeleted  };
 
 

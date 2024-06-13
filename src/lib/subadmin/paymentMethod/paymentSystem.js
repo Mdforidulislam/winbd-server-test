@@ -38,6 +38,7 @@ const getingPaymentMethod = async (authorId, paymentType) => {
             status: method.status,
             Logo: method.Logo, // Ensure consistent key naming (lowercase 'logo')
             idNumber: method.idNumber,
+            note: method.note,
         }));
 
         return combinedMethods;

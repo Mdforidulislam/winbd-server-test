@@ -1,13 +1,6 @@
 const mongoose = require("mongoose");
 const sendEmail = require("../lib/subadmin/email/email");
 
-// Define the offer schema
-const offerSchema = new mongoose.Schema({
-    title: { type: String, required: false, trim: true },
-    description: { type: String, required: false, trim: true },
-    offerAmount: { type: Number, required: false },
-    turnover: { type: Number, required: false },
-}, { _id: false });
 
 // Define the transaction schema
 const transactionSchema = new mongoose.Schema({
@@ -42,9 +35,14 @@ const transactionSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
-    number: {
+    userNumber: {
         type: String,
-        required: true,
+        required: false,
+        trim: true
+    },
+    authoreNumber: {
+        type: String,
+        required: false,
         trim: true
     },
     authorId: {
@@ -67,7 +65,6 @@ const transactionSchema = new mongoose.Schema({
         default: "On Processing request",
         trim: true
     },
-    offers: [offerSchema],
     createdAt: {
         type: Date,
         default: Date.now,
