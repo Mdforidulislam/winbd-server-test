@@ -45,8 +45,8 @@ const transactionRequestDeposite = async (authorId) => {
         .lean();
     
         // Pop the most recent turnover record
-        const newTurnover = oldTurnover.pop();
-        const offerAmount = newTurnover ? newTurnover.offerAmount : 0;
+        const getinglastAmount = oldTurnover[oldTurnover.length - 1].offerAmount;
+        const offerAmount = getinglastAmount ? getinglastAmount : 0 ;
         
         // Filter and map the deposit data with "Processing" status
         const queryDepositeData = matchAuthorData
@@ -82,8 +82,7 @@ const transactionRequestDeposite = async (authorId) => {
             return {
                 message: "Successfully retrieved payment request information",
                 queryDepositeData,
-                oldTurnover,
-                newTurnover
+                oldTurnover
             };
         }
     } catch (error) {
