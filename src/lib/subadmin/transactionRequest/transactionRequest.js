@@ -45,7 +45,7 @@ const transactionRequestDeposite = async (authorId) => {
         .lean();
     
         // Pop the most recent turnover record
-        const getinglastAmount = oldTurnover[oldTurnover.length - 1].offerAmount;
+        const getinglastAmount = oldTurnover[oldTurnover.length - 1]?.offerAmount;
         const offerAmount = getinglastAmount ? getinglastAmount : 0 ;
         
         // Filter and map the deposit data with "Processing" status
@@ -190,24 +190,30 @@ const verifyTransactionData = async (authoreId) => {
 
 // transaction request feedback
 
-const transactionRestFeedback = async (id, requestStatus, note = 'waiting for response',transactionId) => {
+const transactionRestFeedback = async (id, requestStatus, note = 'waiting for response',transactionId , tnxType,userName) => {
     try {
       if (!id || !requestStatus) {
         return { message: "Please provide valid id and status data for the change request" };
-      }
+        }
+        console.log(id, requestStatus, note ,transactionId , tnxType,userName);
   
       const updateFields = {};
       let responseMessage = '';
   
-      if (['Approved', 'verify', 'Rejected'].includes(requestStatus)) {
+      if (['Approved', 'verify', 'Rejected'].includes(requestStatus) && tnxType === 'deposite') {
         updateFields.requestStatus = requestStatus;
         updateFields.statusNote = note;
         responseMessage = 'Request status updated successfully';
-      } else {
+      } if(tnxType === 'withdraw') {
         updateFields.transactionId = transactionId;
         updateFields.requestStatus = requestStatus;
         updateFields.statusNote = note;
         responseMessage = 'Transaction ID updated successfully';
+        const deleletedAllTurnover = await PromotionOffersSave.deleteMany({ userName: userName });
+          console.log(deleletedAllTurnover);
+          
+        console.log(id, requestStatus,note,transactionId , tnxType,userName);
+
       }
   
       const updatedTransaction = await Transactions.findOneAndUpdate(

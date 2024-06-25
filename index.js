@@ -1,56 +1,52 @@
 const express = require('express');
+const http = require('http');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+require('dotenv').config();
+
 const connectDB = require('./src/db/connectDB');
 const router = require('./src/routes');
 const globalErrorHandler = require('./src/utils/globalErrorHandler');
+const { setupWebSocket } = require('./src/middlewares/websoket');
+
+
+
 const app = express();
-const bodyParser = require('body-parser')
-const request = require('request');
-const cors = require('cors');
-const { connectRedis } = require('./src/config/redis');
 const port = process.env.PORT || 5000;
 
-require('dotenv').config();
-
-
-// corse origin access here 
-
-app.use(cors())
+// Middleware setup
+app.use(cors());
 app.use(bodyParser.json());
+app.use(router);
 
-// all router access here 
-app.use(router)
+// Health check route
+app.get("/health", (req, res) => {
+    res.send('admin system running');
+});
 
-// connection database here 
-app.get("/health",(req,res)=>{
-    res.send('admin system running ')
-})
+// Create HTTPS server
+const server = http.createServer(app);
+// Setup WebSocket server
+setupWebSocket(server);
 
-// verify token == livechateWebsiteToken123 ( here just add )
-
-
-
-app.use(bodyParser.json()); // Use body-parser middleware to parse JSON requests
-
-
-
-app.all('*',(req,res,next)=>{
-    const error = new Error(`can't find ${req.originalUrl}on the server`)
+// Error handling middleware
+app.all('*', (req, res, next) => {
+    const error = new Error(`Can't find ${req.originalUrl} on this server`);
     error.status = 404;
-    next(error)
-})
+    next(error);
+});
+app.use(globalErrorHandler);
 
-app.use(globalErrorHandler)
 
-// connect mongodb
-const main = async () =>{
-    await connectDB()
-    app.listen(port,()=>{
-        console.log(`admin managment system runing ${port}`);
+
+// Connect to the database and start the server
+const main = async () => {
+    await connectDB();
+    server.listen(port, () => {
+        console.log(`Admin management system running on port ${port}`);
     });
-}
+};
 
+main();
 
-
-main()
-
-module.exports = app; 
+module.exports = app;

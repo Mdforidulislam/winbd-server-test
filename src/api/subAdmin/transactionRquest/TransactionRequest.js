@@ -46,7 +46,9 @@ const transactionRequsetFeedbackapi = async (req, res) => {
         const requestStatus = req.query.status;
         const note = req.query.note;
         const transactionId = req.query.transactionId;
-        const finalResult = await transactionRestFeedback(id, requestStatus,note,transactionId);
+        const tnxType = req.query.tnxtype;
+        const userName = req.query.userName;
+        const finalResult = await transactionRestFeedback(id, requestStatus,note,transactionId,tnxType,userName);
         res.status(200).json(finalResult);
      } catch (error) { res.status(500).json({ error: error.message }) };
 };

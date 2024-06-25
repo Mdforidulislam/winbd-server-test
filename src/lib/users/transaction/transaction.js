@@ -5,6 +5,7 @@ const { sendEmail } = require('../../subadmin/email/email');
 const { EmailBox } = require('../../../models/email');
 const PromotionOffersSave = require('../../../models/promotionsave');
 const PromotionOffers = require('../../../models/promotion');
+const { notifyClient } = require('../../../middlewares/websoket');
 
 
 
@@ -18,26 +19,24 @@ const validateTransactionInfo = (transInfo) => {
 // calculation promotion 
 const calculatePromotionOffers = async (transInfo) => {
     try {
-        const promotionTitles = transInfo.offers.map(item => item.title);
-        const promotionOffers = await PromotionOffers.find({ title: { $in: promotionTitles } });
-
-        const offerMap = promotionOffers.reduce((map, offer) => {
-            map[offer.title] = offer;
-            return map;
-        }, {});
+        const [offerTitlehere] = transInfo.offers.map(item => item.title);
+        const promotionOffers = await PromotionOffers.findOne({ title: offerTitlehere });
 
         const promotionsToSave = transInfo.offers.map(item => {
-            const promotionOffer = offerMap[item.title];
-            if (promotionOffer && transInfo.amount >= promotionOffer.amount && transInfo.paymentChannel === 'cashout') {
+            const promotionOffer = promotionOffers?.title;
+            if (promotionOffer && transInfo.amount >= promotionOffers.amount && transInfo.paymentChannel === 'cashout' && transInfo.transactionType === "deposite") {
                 let offerAmount = 0;
                 let turnover = 0;
 
-                if (promotionOffer.percentage) {
-                    offerAmount = (transInfo.amount * promotionOffer.percentage) / 100;
-                } else if (promotionOffer.fixedAmount) {
-                    offerAmount = promotionOffer.fixedAmount;
+                if (promotionOffers.percentage) {
+                    offerAmount = (transInfo.amount * promotionOffers.percentage) / 100;
+                } else if (promotionOffers.fixedAmount) {
+                    offerAmount = promotionOffers.fixedAmount;
                 }
-                turnover = offerAmount + transInfo.amount * parseInt(promotionOffer.turnover, 10);
+                if (!isNaN(promotionOffers.turnover)) {
+                    turnover = offerAmount + transInfo.amount * parseInt(promotionOffers.turnover);
+                }
+
 
                 // Create the promotion data to be saved
                 return {
@@ -49,18 +48,15 @@ const calculatePromotionOffers = async (transInfo) => {
                     amount: transInfo.amount,
                     authorId: transInfo.authorId
                 };
-            }
+            } 
             return null;
-        }).filter(promotion => promotion !== null);
-
-        console.log(promotionsToSave);
+        }).filter(item => item !== null); 
 
         if (promotionsToSave.length > 0) {
             await PromotionOffersSave.insertMany(promotionsToSave);
         }
 
     } catch (error) {
-        console.error("Error calculating promotion offers:", error);
         throw new Error("Failed to calculate promotion offers");
     }
 };
@@ -88,6 +84,10 @@ const insertTransaction = async (transInfo) => {
 
         // Create and save the transaction
         const insertedTransaction = await Transactions.create(transInfo);
+        // Send notification for live update
+        if (insertedTransaction) {
+            notifyClient(transInfo.authorId, { type: 'new_transaction', transInfo });
+        }
 
         // Send email notification
         const { authorId, userName, transactionType, amount, paymentMethod } = transInfo;
@@ -133,6 +133,12 @@ const insertTransaction = async (transInfo) => {
                     transInfo._id = existingTransaction._id; // Keep the same _id to overwrite the existing document
                     transInfo.requestStatus = "Processing";
                     const updatedTransaction = await Transactions.findByIdAndUpdate(existingTransaction._id, transInfo, { new: true });
+
+                    // send  notification for live udpate notify
+                    if (updatedTransaction) {
+                        notifyClient(transInfo.authorId,{ type: 'new_transaction', transInfo })
+                    }
+
                     return { success: true, message: "Transaction inserted successfully", data: updatedTransaction };
                 } else {
                     return { success: false, message: 'Transaction ID must be unique.' };
