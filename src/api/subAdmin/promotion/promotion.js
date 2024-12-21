@@ -1,5 +1,4 @@
-const { insertPromotionOffers, updatePromotionValue, deletePromotionOffers, getingPromotionOfferList, deletedTurnoverSave } = require("../../../lib/subadmin/Promotion/promotion");
-
+import { insertPromotionOffers, updatePromotionValue, deletePromotionOffers, getingPromotionOfferList, deletedTurnoverSave } from "../../../lib/subadmin/Promotion/promotion.js";
 
 // Insert promotion offer data here
 const promtionOfferinser = async (req, res) => {
@@ -52,8 +51,6 @@ const deletedPromtion = async (req, res) => {
     }
 };
 
-
-
 // deleted the turnover
 
 const promotionTurnoverDeleted = async (req, res) => {
@@ -71,10 +68,6 @@ const promotionTurnoverDeleted = async (req, res) => {
     }
 };
 
-
-
-
-
-module.exports = { promtionOfferinser , getingPromotinOfferInfo ,updatePromotionData , deletedPromtion ,promotionTurnoverDeleted  };
+export { promtionOfferinser, getingPromotinOfferInfo, updatePromotionData, deletedPromtion, promotionTurnoverDeleted };
 
 

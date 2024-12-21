@@ -1,4 +1,4 @@
-const { transactionRequestDeposite, transactionRequestWithdraw, transactionRestFeedback, verifyTransactionData } = require("../../../lib/subadmin/transactionRequest/transactionRequest");
+import { transactionRequestDeposite, transactionRequestWithdraw, transactionRestFeedback, verifyTransactionData } from "../../../lib/subadmin/transactionRequest/transactionRequest.js";
 
 /// geting transaction  and send to subadmin
 
@@ -54,4 +54,4 @@ const transactionRequsetFeedbackapi = async (req, res) => {
 };
 
 
-module.exports = { getingTransactionRequestDeposite, getingTransactionRequestWithdraw , transactionRequsetFeedbackapi , getingVerifydata};
+export { getingTransactionRequestDeposite, getingTransactionRequestWithdraw, transactionRequsetFeedbackapi, getingVerifydata };

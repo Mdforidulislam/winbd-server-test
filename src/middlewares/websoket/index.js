@@ -1,4 +1,4 @@
-const WebSocket = require('ws');
+import WebSocket from 'ws';
 
 const clients = new Map();
 
@@ -36,4 +36,4 @@ const notifyClient = (userId, data) => {
     }
 };
 
-module.exports = { setupWebSocket, notifyClient };
+export { setupWebSocket, notifyClient };

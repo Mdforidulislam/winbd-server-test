@@ -1,4 +1,4 @@
-const { showNumberlib } = require("../../../lib/users/showNumberlib/showNumberlib");
+import { showNumberlib } from "../../../lib/users/showNumberlib/showNumberlib.js";
 
 const showNumber = async (req, res) => {
     try { 
@@ -11,4 +11,4 @@ const showNumber = async (req, res) => {
     }
 }
 
-module.exports = { showNumber };
+export { showNumber };

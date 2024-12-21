@@ -1,4 +1,4 @@
-const SocialMediaLink = require("../../../models/SocialMedia");
+import { SocialMediaLink } from "../../../models/SocialMedia.js";
 
 
 // isnert the socail link here 
@@ -27,22 +27,17 @@ const insertSocialMediaContactUsers = async (socialInfo) => {
   }
 };
 
-
-
 // geting socialMedia link here
-
 const getSocialMediaLink = async (authorId) => {
   try {
       
     console.log(authorId);
-
 
     if (!authorId) {
             return { message: "Author ID is required for validation." };
     }
     const getSubAdminSocial = await SocialMediaLink.findOne({ authorId }, { _id: 0, socialMediaLinks: 1 }).lean();
     
-
       if (getSubAdminSocial) {
               const { socialMediaLinks } = getSubAdminSocial;
               const sanitizedSocialMediaLinks = {};
@@ -66,7 +61,5 @@ const getSocialMediaLink = async (authorId) => {
       return { message: "An error occurred while fetching data", error };
     }
   };
-  
 
-
-module.exports = { insertSocialMediaContactUsers ,getSocialMediaLink};
+export { insertSocialMediaContactUsers, getSocialMediaLink };

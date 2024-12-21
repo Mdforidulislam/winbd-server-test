@@ -1,10 +1,8 @@
-const Admin = require("../../../models/admin");
-const SocialMediaLink = require("../../../models/SocialMedia");
-const { UserList } = require("../../../models/users");
-
+import {Admin} from "../../../models/admin.js";
+import {SocialMediaLink} from "../../../models/SocialMedia.js";
+import { UserList } from "../../../models/users.js";
 
 // geting users contact info socail media whatApps, facebook form subamdin
-
 const getSocialMediaInfo = async (authorId) => {
     try {
         if (!authorId) {
@@ -14,8 +12,9 @@ const getSocialMediaInfo = async (authorId) => {
         const socialMediaInfo = await SocialMediaLink.findOne({
             $or: [
                 { authorId: authorId },
-                {role: 'admin'}
-        ]}, { socialMediaLinks: 1, imgLink: 1, _id: 0 }).lean();
+                { role: 'admin' }
+            ]
+        }, { socialMediaLinks: 1, imgLink: 1, _id: 0 }).lean();
 
         if (socialMediaInfo) {
             return {
@@ -30,38 +29,35 @@ const getSocialMediaInfo = async (authorId) => {
     }
 };
 
-
 // password forgot userNmaeandPassword
-
-    const passowrdForgot = async (userName, newPassword) => {
-        try {
-            if (userName === '' || newPassword === '') {
-                return { message: "Please provide a valid username and newPassword" };
-            }
-
-            console.log(userName,newPassword);
-            // Grouping collections
-            const updateResults = [];
-
-            // Update password in user collection
-            const userResult = await UserList.updateOne(
-                { userName: userName },
-                { $set: { password: newPassword } }
-            );
-            updateResults.push(userResult);
-
-            // Update password in admin collection
-            const adminResult = await Admin.updateOne(
-                { subAdmin: userName },
-                { $set: { password: newPassword } }
-            );
-            updateResults.push(adminResult);
-
-            return { message: "Password updated successfully", updateResults };
-        } catch (error) {
-            return error;
+const passowrdForgot = async (userName, newPassword) => {
+    try {
+        if (userName === '' || newPassword === '') {
+            return { message: "Please provide a valid username and newPassword" };
         }
-    };
 
+        console.log(userName, newPassword);
+        // Grouping collections
+        const updateResults = [];
 
-module.exports = { getSocialMediaInfo,passowrdForgot };
+        // Update password in user collection
+        const userResult = await UserList.updateOne(
+            { userName: userName },
+            { $set: { password: newPassword } }
+        );
+        updateResults.push(userResult);
+
+        // Update password in admin collection
+        const adminResult = await Admin.updateOne(
+            { subAdmin: userName },
+            { $set: { password: newPassword } }
+        );
+        updateResults.push(adminResult);
+
+        return { message: "Password updated successfully", updateResults };
+    } catch (error) {
+        return error;
+    }
+};
+
+export { getSocialMediaInfo, passowrdForgot };

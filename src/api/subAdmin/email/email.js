@@ -1,4 +1,4 @@
-const { emailGetingFromSubAdmin, getingSubAdminEmaildata } = require("../../../lib/subadmin/email/email");
+import { emailGetingFromSubAdmin, getingSubAdminEmaildata } from "../../../lib/subadmin/email/email.js";
 
 //  geting subAdmin Email
 const getingSubAdminEmail = async (req, res) => {
@@ -40,4 +40,4 @@ const updateSubAdminEmail = async (req, res) => {
 };
 
 
-module.exports = { updateSubAdminEmail, getingSubAdminEmail };
+export { updateSubAdminEmail, getingSubAdminEmail };

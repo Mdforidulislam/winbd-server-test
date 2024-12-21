@@ -1,5 +1,5 @@
-const { UserList } = require("../../../models/users");
 
+import { UserList } from "../../../models/users.js";
 
 
 // geting user infomation show data to the subadmin page 
@@ -50,6 +50,7 @@ const getUsersLibray = async (uniqueId, searchValue, pageNumbers, perPage = 50) 
     }
 };
 
-module.exports = { getUsersLibray };
+
+export {getUsersLibray}
 
 

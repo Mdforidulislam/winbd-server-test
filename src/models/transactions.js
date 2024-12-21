@@ -1,5 +1,4 @@
-const mongoose = require("mongoose");
-const sendEmail = require("../lib/subadmin/email/email");
+import mongoose from 'mongoose';
 
 
 // Define the transaction schema
@@ -80,4 +79,4 @@ transactionSchema.index({ authorId: 1, createdAt: -1 });
 
 const Transactions = mongoose.model('Transactions', transactionSchema);
 
-module.exports = Transactions;
+export { Transactions };

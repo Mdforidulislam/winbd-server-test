@@ -1,4 +1,4 @@
-const { transactionHistory } = require("../../../lib/subadmin/transactionRequest/history");
+import { transactionHistory } from "../../../lib/subadmin/transactionRequest/history.js";
 
 // geting history value 
 const getingHistoryapi = async (req, res) => {
@@ -14,4 +14,4 @@ const getingHistoryapi = async (req, res) => {
      } catch (error) { res.status(500).json({ error: error.message }) };
 }
 
-module.exports = { getingHistoryapi };
+export { getingHistoryapi };

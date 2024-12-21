@@ -1,5 +1,4 @@
-const { getSocialMediaInfo, passowrdForgot } = require("../../../lib/users/passwordForgot/passwordForgot");
-
+import { getSocialMediaInfo, passowrdForgot } from "../../../lib/users/passwordForgot/passwordForgot.js";
 
 // geting Subadmin Validation Social media link for password forget 
 const getingSubAdminSocialLink = async (req, res) => {
@@ -29,4 +28,4 @@ const passwordForgotuser = async (req, res) => {
         }
 };
 
-module.exports = { getingSubAdminSocialLink ,passwordForgotuser};
+export { getingSubAdminSocialLink, passwordForgotuser };

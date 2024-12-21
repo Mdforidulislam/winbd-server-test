@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 
 const socialMediaPlatformSchema = new mongoose.Schema({
@@ -51,4 +51,4 @@ const socialMediaPlatformSchema = new mongoose.Schema({
   
 const SocialMediaLink = mongoose.model('SocialMediaLink', socialMediaLinkSchema);
 
-module.exports = SocialMediaLink;
+export { SocialMediaLink };

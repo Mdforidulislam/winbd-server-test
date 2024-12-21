@@ -1,4 +1,6 @@
-const { insertUserToDatabase, getingRegUser, updateUserInfo } = require("../../lib/users/register");
+// const { insertUserToDatabase, getingRegUser, updateUserInfo } = require("../../lib/users/register");
+
+import { insertUserToDatabase, getingRegUser, updateUserInfo } from "../../lib/users/register/index.js";
 
 
 // users data insert here 
@@ -44,4 +46,4 @@ const updateUserInfoAPI = async (req, res) => {
     }
 };
 
-module.exports = { userInsert, getingUsersData, updateUserInfoAPI };
+export  { userInsert, getingUsersData, updateUserInfoAPI };

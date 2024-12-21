@@ -1,4 +1,4 @@
-const Transactions = require("../../../models/transactions");
+
 
 // Date formatting functions
 const formatDate = (date) => {
@@ -119,4 +119,4 @@ const formatResponse = (history, length, perPage) => {
     };
 };
 
-module.exports = { transactionHistory };
+export { transactionHistory };

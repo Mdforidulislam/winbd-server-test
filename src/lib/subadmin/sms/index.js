@@ -1,5 +1,4 @@
-
-const twilio = require('twilio');
+import twilio from 'twilio';
 const client = new twilio('YOUR_ACCOUNT_SID', 'YOUR_AUTH_TOKEN');
 
 client.messages.create({

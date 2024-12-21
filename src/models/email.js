@@ -1,20 +1,20 @@
-const { default: mongoose } = require("mongoose");
+import mongoose from "mongoose";
 
-const emailShema = new mongoose.Schema({
-    authoreId: {
-        type: String,
-        required: true,
-        index: true,
-        trim:true,
-    },
-    email: {
-        type: String,
-        required: true,
-        index: true,
-        trim: true,
-    }
+const emailSchema = new mongoose.Schema({
+  authoreId: {
+    type: String,
+    required: true,
+    index: true,
+    trim: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    index: true,
+    trim: true,
+  }
 });
 
-const EmailBox = mongoose.model('emailbox', emailShema);
+const EmailBox = mongoose.model('emailbox', emailSchema);
 
-module.exports = { EmailBox };
+export { EmailBox };

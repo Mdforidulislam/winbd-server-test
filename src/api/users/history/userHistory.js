@@ -1,5 +1,4 @@
-const { userHistoryUpdateStatus } = require("../../../lib/users/history/history");
-
+import { userHistoryUpdateStatus } from "../../../lib/users/history/history.js";
 
 const userHistoryGeting = async (req, res) => {
     const { userName, searchList } = req.query;
@@ -24,6 +23,4 @@ const userHistoryGeting = async (req, res) => {
     }
 };
 
-
-
-module.exports = { userHistoryGeting };
+export { userHistoryGeting };

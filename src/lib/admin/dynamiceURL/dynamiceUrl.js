@@ -1,10 +1,7 @@
-
-const DynamicallyUrl = require("../../../models/dynamiceURL");
-
+import {DynamicallyUrl} from "../../../models/dynamiceURL.js";
 
 const craateDynamicallyUrlAdmin = async (urlInfo) => {
     try {
-
         if (
             !urlInfo || 
             !urlInfo.redirectUrl || 
@@ -15,8 +12,8 @@ const craateDynamicallyUrlAdmin = async (urlInfo) => {
             return { message: "Please provide a valid HTTPS URL for both redirectUrl and changeLink" };
         }
 
-           // Define options for findOneAndUpdate
-           const options = {
+        // Define options for findOneAndUpdate
+        const options = {
             new: true,               // Return the updated document
             upsert: true,            // Create a new document if it doesn't exist
             setDefaultsOnInsert: true // Apply default values if a new document is created
@@ -49,25 +46,21 @@ const craateDynamicallyUrlAdmin = async (urlInfo) => {
     }
 };
 
-
-
-//  geting url
-
+// geting url
 const getingURlDaynamicaly = async (req, res) => {
     try { 
-
         const geginUrl = await DynamicallyUrl.find();
 
         if (geginUrl.length > 0) {
             return {
                 message: "succesfully geting data",
                 data: geginUrl
-             }
-         }
-
-        } catch (error) {
-            return error;
+            }
         }
+
+    } catch (error) {
+        return error;
+    }
 };
 
-module.exports = { craateDynamicallyUrlAdmin , getingURlDaynamicaly };
+export { craateDynamicallyUrlAdmin, getingURlDaynamicaly };

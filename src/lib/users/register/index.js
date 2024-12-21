@@ -1,6 +1,4 @@
-const exiteUser = require("../../../middlewares/exiteUser");
-const { UserList } = require("../../../models/users");
-
+import exiteUser from "../../../middlewares/exiteUser.js";
 
 
 // insert data to databse 
@@ -39,9 +37,6 @@ const insertUserToDatabase = async(userInfo) =>{
     }
 }
 
-
-
-
 // geting register user data fromt database 
 const getingRegUser = async (userName) => {
     
@@ -65,7 +60,6 @@ const getingRegUser = async (userName) => {
 };
 
 // geting update the userInfo list
-
 const updateUserInfo = async (id, userInfo) => {
     try {
 
@@ -88,6 +82,4 @@ const updateUserInfo = async (id, userInfo) => {
     }
 };
 
-
-
-module.exports = {insertUserToDatabase, getingRegUser,updateUserInfo};
+export { insertUserToDatabase, getingRegUser, updateUserInfo };

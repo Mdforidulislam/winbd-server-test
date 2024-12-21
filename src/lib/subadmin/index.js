@@ -1,5 +1,5 @@
-const exiteUser = require("../../middlewares/exiteUser");
-const Admin = require("../../models/admin");
+import exiteUser from "../../middlewares/exiteUser.js";
+import {Admin} from "../../models/admin.js";
 
 // insert data to databse 
 const insertSubAdmin = async (subAdminInfo) => {
@@ -101,8 +101,4 @@ const updateSubAdminInfo = async (id, subadmininfo) => {
     }
 };
 
-
-
-
-
-module.exports = { insertSubAdmin, subAdminGetTo , updateSubAdminInfo}
+export { insertSubAdmin, subAdminGetTo, updateSubAdminInfo };

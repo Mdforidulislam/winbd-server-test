@@ -1,4 +1,4 @@
-const { insertPaymentInstruction, getPaymentInstructions } = require("../../lib/admin/paymentInstacttion");
+import { insertPaymentInstruction, getPaymentInstructions } from "../../lib/admin/paymentInstacttion.js";
 
 const insertPayInstraction = async (req, res) => {
     try {
@@ -10,19 +10,18 @@ const insertPayInstraction = async (req, res) => {
     }
 };
 
-
 //  geting data payment instraction
-
 
 const getingPayInstraction = async (req, res) => {
     try {
         const getingFinalResult = await getPaymentInstructions();
         res.status(200).json(getingFinalResult);
-     } catch (error) { res.status(500).json({ error: error.message }) };
-}
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
 
-
-module.exports = { insertPayInstraction, getingPayInstraction };
+export { insertPayInstraction, getingPayInstraction };
 
 
 

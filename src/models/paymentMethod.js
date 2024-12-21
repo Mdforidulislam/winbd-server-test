@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const paymentMethodSchema = new mongoose.Schema({
     number: {
@@ -51,5 +51,5 @@ paymentMethodSchema.index({ authorId: 1, transactionMethod: 1 });
 const PaymentMethodDeafult = mongoose.model('PaymentMethodDeafult', paymentMethodSchema);
 const PaymentMethodActive = mongoose.model('PaymentMethodActive', paymentMethodSchema);
 
-module.exports = { PaymentMethodDeafult, PaymentMethodActive };
+export { PaymentMethodDeafult, PaymentMethodActive };
 

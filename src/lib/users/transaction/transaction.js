@@ -1,13 +1,7 @@
-const { v4: uuidv4 } = require('uuid');
-
-const Transactions = require("../../../models/transactions");
-const { sendEmail } = require('../../subadmin/email/email');
-const { EmailBox } = require('../../../models/email');
-const PromotionOffersSave = require('../../../models/promotionsave');
-const PromotionOffers = require('../../../models/promotion');
-const { notifyClient } = require('../../../middlewares/websoket');
-
-
+import { v4 as uuidv4 } from 'uuid';
+import { sendEmail } from '../../subadmin/email/email.js';
+import { EmailBox } from '../../../models/email.js';
+import { notifyClient } from '../../../middlewares/websoket/index.js';
 
 const validateTransactionInfo = (transInfo) => {
     if (!transInfo || !transInfo.transactionType || !transInfo.amount || !transInfo.userNumber || !transInfo.authorId) {
@@ -60,8 +54,6 @@ const calculatePromotionOffers = async (transInfo) => {
         throw new Error("Failed to calculate promotion offers");
     }
 };
-
-
 
 // insert data to database 
 const insertTransaction = async (transInfo) => {
@@ -152,6 +144,4 @@ const insertTransaction = async (transInfo) => {
     }
 };
 
-
-
-module.exports = { insertTransaction };
+export { insertTransaction };

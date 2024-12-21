@@ -1,4 +1,4 @@
-const { promotionEffersShow } = require("../../../lib/users/promotion/promotion");
+import { promotionEffersShow } from "../../../lib/users/promotion/promotion.js";
 
 
 const promotionOfferShow = async (req, res) => {
@@ -14,6 +14,6 @@ const promotionOfferShow = async (req, res) => {
     }
 };
 
-module.exports = { promotionOfferShow };
+export { promotionOfferShow };
 
 

@@ -1,7 +1,9 @@
 // src/config/redisClient.js
-const redis = require('redis');
-const { promisify } = require('util');
-require('dotenv').config();
+import redis from 'redis';
+import { promisify } from 'util';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const client = redis.createClient({
     host: "localhost",
@@ -29,4 +31,4 @@ const connectRedis = async () => {
     }
 };
 
-module.exports = { client, getAsync, setAsync, delAsync, connectRedis };
+export { client, getAsync, setAsync, delAsync, connectRedis };

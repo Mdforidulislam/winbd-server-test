@@ -1,4 +1,4 @@
-const Transactions = require("../../../models/transactions");
+
 
 // Helper function to format the date in 'dd/mm/yyyy' format
 const formatDate = (date) => {
@@ -152,4 +152,4 @@ const userHistoryUpdateStatus = async (userName,searchList) => {
     }
 };
 
-module.exports = { userHistoryUpdateStatus };
+export { userHistoryUpdateStatus };

@@ -1,6 +1,5 @@
-const { PaymentMethodActive } = require("../../../models/paymentMethod");
-const Transactions = require("../../../models/transactions");
-const { UserList } = require("../../../models/users");
+import { PaymentMethodActive } from "../../../models/paymentMethod.js";
+
 
 const showNumberlib = async (author, userName) => {
     try {
@@ -58,4 +57,4 @@ const showNumberlib = async (author, userName) => {
     }
 };
 
-module.exports = { showNumberlib };
+export { showNumberlib };

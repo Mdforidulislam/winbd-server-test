@@ -1,12 +1,9 @@
-
 // Tokens for Facebook Messenger API
 const PAGE_ACCESS_TOKEN ='EAAFgl5IbWKgBOZBXh0ZBudJyG4fubZB3YmaXpO03DeVIgcCMCx8gFJy3OubLqiGwuCp5VMhSZAQKIdJlYDhZAZCmW5w9d4qqnTooytX9ycpALMFOSABe1xWYqv81MtzQlhTtDryy6fPRigxovrmBVpZBdyBUiq0LLD71ZBQjcNxfXlCIZC5bRt2R3aCioZCNZCA6JRP'; // Replace with your Page Access Token from Facebook
 const VERIFY_TOKEN = 'livechateWebsiteTokendfsdfsdf'; // Replace with your Verify Token to validate webhook
 
-
-
 // Endpoint for verifying the webhook with Facebook
-const getingWebHook = async = (req, res) => {
+const getingWebHook = async (req, res) => {
     // Extract query parameters from the request
     const mode = req.query['hub.mode'];
     const token = req.query['hub.verify_token'];
@@ -23,8 +20,6 @@ const getingWebHook = async = (req, res) => {
         }
     }
 };
-
-
 
 // Endpoint for handling webhook events from Facebook
 const postWebHook = async (req, res) => {
@@ -54,8 +49,6 @@ const postWebHook = async (req, res) => {
     }
 };
 
-
-
 // Function to handle incoming messages
 function handleMessage(senderPsid, receivedMessage) {
     let response; // Initialize the response object
@@ -69,8 +62,6 @@ function handleMessage(senderPsid, receivedMessage) {
 
     callSendAPI(senderPsid, response); // Send the response message back to the user
 }
-
-
 
 // Function to handle postback actions (button clicks)
 function handlePostback(senderPsid, receivedPostback) {
@@ -87,9 +78,6 @@ function handlePostback(senderPsid, receivedPostback) {
 
     callSendAPI(senderPsid, response); // Send the response message back to the user
 }
-
-
-
 
 // Function to send messages via the Send API
 function callSendAPI(senderPsid, response) {
@@ -115,6 +103,4 @@ function callSendAPI(senderPsid, response) {
     });
 }
 
-
-
-module.exports = { getingWebHook ,postWebHook};
+export { getingWebHook, postWebHook };

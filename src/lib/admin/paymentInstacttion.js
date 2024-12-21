@@ -1,8 +1,6 @@
-const PaymentInstruction = require("../../models/intstractions");
+import {PaymentInstraction} from "../../models/intstractions.js";
 
-
-//  insert data to database 
-
+// insert data to database 
 const insertPaymentInstruction = async (payInstruction) => {
     try {
         // Validate input
@@ -31,9 +29,7 @@ const insertPaymentInstruction = async (payInstruction) => {
     }
 };
 
-
-//   geting data instrucation 
-
+// geting data instrucation 
 const getPaymentInstructions = async (channeltype) => {
     try {
         const paymentInstructions = await PaymentInstruction.find();
@@ -48,4 +44,4 @@ const getPaymentInstructions = async (channeltype) => {
     }
 };
 
-module.exports = { getPaymentInstructions, insertPaymentInstruction };
+export { getPaymentInstructions, insertPaymentInstruction };

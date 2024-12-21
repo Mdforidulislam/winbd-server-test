@@ -1,5 +1,5 @@
-const Admin = require("../../models/admin");
-const { UserList } = require("../../models/users");
+import {Admin} from "../../models/admin.js";
+import { UserList } from "../../models/users.js";
 
 const adminUserValidation = async (req, res) => {
     const { userName, password } = req.query;
@@ -9,7 +9,7 @@ const adminUserValidation = async (req, res) => {
         return res.status(400).json({ message: 'Missing userName or password' });
     }
 
-    console.log(userName,password);
+    console.log(userName, password);
 
     try {
         // Query admin and user collections in parallel for better performance
@@ -39,4 +39,4 @@ const adminUserValidation = async (req, res) => {
     }
 };
 
-module.exports = { adminUserValidation };
+export { adminUserValidation };

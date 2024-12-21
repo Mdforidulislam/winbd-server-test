@@ -1,5 +1,5 @@
-const PromotionOffers = require("../../../models/promotion");
-const PromotionOffersSave = require("../../../models/promotionsave");
+import {PromotionOffers} from "../../../models/promotion.js";
+import {PromotionOffersSave} from "../../../models/promotionsave.js";
 
 // Convert data
 const transformPromotionData = (input) => {
@@ -16,7 +16,6 @@ const transformPromotionData = (input) => {
         oneTime: input.timeType === 'oneTime'
     };
 };
-
 
 // Insert the promotion data
 const insertPromotionOffers = async (promotionInfo) => {
@@ -47,7 +46,6 @@ const insertPromotionOffers = async (promotionInfo) => {
 }
 
 // geting promotion offerlist
-
 const getingPromotionOfferList = async () => {
     try { 
         const getingPromotionList = await PromotionOffers.find().lean();
@@ -60,7 +58,6 @@ const getingPromotionOfferList = async () => {
 };
 
 // update promotion value here
-
 const updatePromotionValue = async (findById,updateInfo) => {
     try {
         // Validate the input data
@@ -87,9 +84,7 @@ const updatePromotionValue = async (findById,updateInfo) => {
     }
 };
 
-
-//  deleted the promotion offer list
-
+// deleted the promotion offer list
 const deletePromotionOffers = async (id) => {
     try {
         // Validate the input ID
@@ -112,9 +107,7 @@ const deletePromotionOffers = async (id) => {
     }
 };
 
-
 // deleted turnover
-
 const deletedTurnoverSave = async (id) => {
     try {
         const deletedTurnoverSave = await PromotionOffersSave.findByIdAndDelete(id);
@@ -130,6 +123,4 @@ const deletedTurnoverSave = async (id) => {
     }
 };
 
-
-
-module.exports = { insertPromotionOffers , getingPromotionOfferList , updatePromotionValue , deletePromotionOffers , deletedTurnoverSave };
+export { insertPromotionOffers, getingPromotionOfferList, updatePromotionValue, deletePromotionOffers, deletedTurnoverSave };

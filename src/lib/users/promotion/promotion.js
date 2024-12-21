@@ -1,5 +1,5 @@
-const PromotionOffers = require("../../../models/promotion");
-const Transactions = require("../../../models/transactions");
+import {PromotionOffers} from "../../../models/promotion.js";
+import {Transactions} from "../../../models/transactions.js";
 
 const promotionEffersShow = async (userName) => {
     try { 
@@ -67,4 +67,4 @@ const promotionEffersShow = async (userName) => {
     }
 };
 
-module.exports = { promotionEffersShow };
+export { promotionEffersShow };

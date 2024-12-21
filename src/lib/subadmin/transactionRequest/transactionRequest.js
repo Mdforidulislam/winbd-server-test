@@ -1,5 +1,3 @@
-const PromotionOffersSave = require("../../../models/promotionsave");
-const Transactions = require("../../../models/transactions");
 
 
 
@@ -234,4 +232,4 @@ const transactionRestFeedback = async (id, requestStatus, note = 'waiting for re
   };
 
 
-module.exports = { transactionRequestDeposite, transactionRequestWithdraw , transactionRestFeedback ,verifyTransactionData };
+export { transactionRequestDeposite, transactionRequestWithdraw, transactionRestFeedback, verifyTransactionData };

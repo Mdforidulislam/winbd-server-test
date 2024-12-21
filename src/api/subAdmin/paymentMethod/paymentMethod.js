@@ -1,4 +1,4 @@
-const { addTransactionMethod, getingPaymentMethod, updatePaymentmethod } = require("../../../lib/subadmin/paymentMethod/paymentSystem");
+import { addTransactionMethod, getingPaymentMethod, updatePaymentmethod } from "../../../lib/subadmin/paymentMethod/paymentSystem.js";
 
 const transactionMethod = async (req, res) => {
     try {
@@ -38,4 +38,4 @@ const updatePaymentMethodNumber = async (req, res) => {
     };
 }
 
-module.exports = {transactionMethod, getingPaymentmethod , updatePaymentMethodNumber}
+export { transactionMethod, getingPaymentmethod, updatePaymentMethodNumber };

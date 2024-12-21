@@ -1,4 +1,4 @@
-const { insertSubAdmin, subAdminGetTo, updateSubAdminInfo } = require("../../lib/subadmin");
+import { insertSubAdmin, subAdminGetTo, updateSubAdminInfo } from "../../lib/subadmin/index.js";
 
 // subadmin data insert
 const subAdminInsert = async (req, res) => {
@@ -38,4 +38,4 @@ const updatesubAdminInfoAPI = async (req, res) => {
   }
 };
 
-module.exports = { subAdminInsert, getingSubAdmin,updatesubAdminInfoAPI };
+export { subAdminInsert, getingSubAdmin, updatesubAdminInfoAPI };

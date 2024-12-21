@@ -1,5 +1,4 @@
-const { PaymentMethodDeafult, PaymentMethodActive } = require("../../../models/paymentMethod");
-
+import { PaymentMethodDeafult, PaymentMethodActive } from "../../../models/paymentMethod.js";
 
 // Insert a payment method
 const addTransactionMethod = async (paymentInfo) => {
@@ -81,8 +80,4 @@ const updatePaymentmethod = async (updateInfo) => {
     }
 };
 
-
-
-
-
-module.exports = { addTransactionMethod, getingPaymentMethod , updatePaymentmethod };
+export { addTransactionMethod, getingPaymentMethod, updatePaymentmethod };
