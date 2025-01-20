@@ -1,8 +1,8 @@
 import express from 'express';
-import { adminInsertData, getAdminInfoList } from '../api/admin/index.js';
-import { getingSubAdmin, subAdminInsert, updatesubAdminInfoAPI } from '../api/subAdmin/index.js';
+import { adminInsertData, getAdminInfoList, updatePaymentInfo } from '../api/admin/index.js';
+import { getingSubAdmin, getSingleSubAdmin, subAdminInsert, updatesubAdminInfoAPI } from '../api/subAdmin/index.js';
 import { getingUserCountList, getingUserShowSubAdmin } from '../api/subAdmin/getUsers/getUsers.js';// jamela
-import { getingPaymentmethod, transactionMethod, updatePaymentMethodNumber } from '../api/subAdmin/paymentMethod/paymentMethod.js'; // jamela
+import { getingPaymentmethod, transactionMethod, updatePaymentMethodNumber, updatePermissionPayment } from '../api/subAdmin/paymentMethod/paymentMethod.js'; // jamela
 import { showNumber } from '../api/users/showNumber/showNumber.js'; // jamela
 import { getingUsersData, updateUserInfoAPI, userInsert } from '../api/users/index.js';
 import { transactionSave } from '../api/users/transaction/transaction.js';// jamela
@@ -22,6 +22,8 @@ import { adminUserValidation } from '../middlewares/AdminUsersValidation/index.j
 import { bkashPaymentAuth } from '../middlewares/BkashPayment/BkashPayment.js';
 import PaymentController from '../paymentControler/paymentControler.js';
 import paymentControler from '../paymentControler/paymentControler.js';
+import { bkadhPaymentAPI, bkashConnectUserAPI, bkashMarcentGetAPI } from '../api/subAdmin/payment/bkash/index.js';
+
 // import { insertDynamiceUrl, getingDynamicallyUrl } from '../api/admin/dynamiceUrl/dynamicUrl.js';
 // import { insertPayInstraction, getingPayInstraction } from '../api/admin/payInstraction.js';
 // import { getingSubAdminEmail, updateSubAdminEmail } from '../api/subAdmin/email/email.js';
@@ -46,10 +48,12 @@ const router = express.Router();
 
 router.get('/adminInsert', adminInsertData); // insert data to database 
 router.get('/getingData', getAdminInfoList);  // geting database all the admin data
+router.put("/paymentUpdate",updatePaymentInfo)
 
 router.post('/insertSubAdmin', subAdminInsert); // insert data to database 
 router.put('/updatesubAdminInfoAPI', updatesubAdminInfoAPI); // update the subadmin info here 
 router.get('/getingDataSubAdmin', getingSubAdmin); // geting sub admin 
+router.get("/getingSingleSubAdmin", getSingleSubAdmin);
 router.get('/getingUserCountList', getingUserCountList); // geting user Register length 
 
 router.post('/insertUsers', userInsert); // insert users for register 
@@ -60,6 +64,7 @@ router.get('/getinguse', getingUserShowSubAdmin); // show the user to subadmin
 router.post('/addTransaction', transactionMethod); // add a transaction method 
 router.get('/getingPaymentmethod', getingPaymentmethod); // geting payment method
 router.patch('/updatePaymentMethod', updatePaymentMethodNumber); // update payment method
+router.put("/updatePaymentPermission",updatePermissionPayment)
 
 router.get('/showPaymentNumber', showNumber); // show the number to the users 
 router.post('/insertTransaction', transactionSave); // save the transaction data 
@@ -103,8 +108,15 @@ router.put('/passwordForgotuser', passwordForgotuser); // update the users and a
 router.get('/userValidation', adminUserValidation); // isRoleExite inside the database ( check )
 
 // ====================== bkash route ===============================
+
+router.post("/marchent-add",bkadhPaymentAPI); // mercent add
+router.get("/margent-get", bkashMarcentGetAPI); // marcent get
+router.get("/connect-user",bkashConnectUserAPI); // connectUserAPI
+
 router.post("/bkash-payment-create",bkashPaymentAuth, PaymentController.createPayment);
-router.get("/bkash-callback-url?", PaymentController.handleCallback);
+router.get("/bkash-callback-url", PaymentController.handleCallback);
 router.post("/bkash-payment-refund", paymentControler.refundPayment);
 
 export { router };
+
+

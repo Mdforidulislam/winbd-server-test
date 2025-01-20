@@ -1,4 +1,6 @@
+import { response } from "express";
 import { insertSubAdmin, subAdminGetTo, updateSubAdminInfo } from "../../lib/subadmin/index.js";
+import { singleSubAdmin } from "../../lib/admin/index.js";
 
 // subadmin data insert
 const subAdminInsert = async (req, res) => {
@@ -23,6 +25,36 @@ const getingSubAdmin = async (req, res) => {
   }
 };
 
+
+const getSingleSubAdmin = async (req, res) => {
+  try {
+    const { uniqueId } = req.query;
+
+    if (!uniqueId) {
+      return res.status(400).json({
+        message: "ID is required",
+        status: 400,
+      });
+    }
+
+    const response = await singleSubAdmin(uniqueId);
+
+    res.status(200).json({
+      message: "Successfully fetched sub-admin",
+      status: 200,
+      data: response,
+    });
+  } catch (error) {
+    const statusCode = error.message.includes("not found") ? 404 : 500;
+
+    res.status(statusCode).json({
+      message: "An error occurred",
+      status: statusCode,
+      error: error.message,
+    });
+  }
+};
+
 // update subadmin here
 const updatesubAdminInfoAPI = async (req, res) => {
   try { 
@@ -38,4 +70,4 @@ const updatesubAdminInfoAPI = async (req, res) => {
   }
 };
 
-export { subAdminInsert, getingSubAdmin, updatesubAdminInfoAPI };
+export { subAdminInsert, getingSubAdmin, updatesubAdminInfoAPI ,getSingleSubAdmin};

@@ -1,3 +1,4 @@
+import { Transactions } from "../../../models/transactions.js";
 
 
 // Date formatting functions
@@ -68,8 +69,6 @@ const transactionHistory = async (authorId, searchValue, pageNumber, date) => {
         const searchCriteria = buildSearchCriteria(authorId, searchValue, date);
         console.log('Search Criteria:', JSON.stringify(searchCriteria, null, 2));
 
-
-        
 
         let perPage = 30;
 

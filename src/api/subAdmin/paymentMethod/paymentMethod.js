@@ -1,4 +1,4 @@
-import { addTransactionMethod, getingPaymentMethod, updatePaymentmethod } from "../../../lib/subadmin/paymentMethod/paymentSystem.js";
+import { addTransactionMethod, getingPaymentMethod, updatePaymentmethod, updatePermissionPaymentDB } from "../../../lib/subadmin/paymentMethod/paymentSystem.js";
 
 const transactionMethod = async (req, res) => {
     try {
@@ -38,4 +38,32 @@ const updatePaymentMethodNumber = async (req, res) => {
     };
 }
 
-export { transactionMethod, getingPaymentmethod, updatePaymentMethodNumber };
+const updatePermissionPayment = async(req,res) =>{
+    try{
+        const { id, type} = req.query;
+
+        if(!id || !type){
+            res.status(404).json({
+                message:"wrong info given", 
+            })
+        }
+
+        const response = await updatePermissionPaymentDB(id, type)
+        res.status(200).json({
+            message: "successfully update the paymemnt",
+            status: 200,
+            data: response,
+        })
+        
+    }catch(error){
+        res.statu(500).json({
+            message: "error accorurect",
+            statu: 500, 
+            error: error.message
+        })
+    }
+}
+
+
+
+export { transactionMethod, getingPaymentmethod, updatePaymentMethodNumber , updatePermissionPayment };

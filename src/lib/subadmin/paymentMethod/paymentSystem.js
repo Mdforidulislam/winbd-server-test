@@ -38,6 +38,7 @@ const getingPaymentMethod = async (authorId, paymentType) => {
             Logo: method.Logo, // Ensure consistent key naming (lowercase 'logo')
             idNumber: method.idNumber,
             note: method.note,
+            activePayMethod: method.activePayMethod
         }));
 
         return combinedMethods;
@@ -80,4 +81,58 @@ const updatePaymentmethod = async (updateInfo) => {
     }
 };
 
-export { addTransactionMethod, getingPaymentMethod, updatePaymentmethod };
+
+const updatePermissionPaymentDB = async (id, type) => {
+    try {
+      // Fetch the document by ID
+      const result = await PaymentMethodActive.findById(id);
+  
+      // Check if the result exists
+      if (!result) {
+        throw new Error("Document not found");
+      }
+
+      console.log(result)
+      console.log(typeof result.note === 'string' )
+      console.log( typeof result.note)
+      console.log(result.note === "" )
+      console.log(result.note )
+
+      if (typeof result.note === 'string' || result.note === null) {
+        result.note = {
+          title: '',
+          list: [],
+          remainder: ''
+        };
+      }
+
+      // Update the `allowed` field for the element matching the `type`
+      const updatedPayMethods = result.activePayMethod.map((method) => {
+        return {
+          ...method, 
+          allowed: method.type === type ? !method.allowed : false
+        };
+      });
+  
+
+  
+
+      // Log the updated pay methods
+    //   console.log(updatedPayMethods);
+  
+      // You should update the `activePayMethod` in the document and save
+      result.activePayMethod = updatedPayMethods;
+      const updatedResult = await result.save();
+  
+      return updatedResult;
+    } catch (error) {
+      console.error("Error updating permission:", error.message);
+      return error;
+    }
+  };
+  
+  
+  
+  
+
+export { addTransactionMethod, getingPaymentMethod, updatePaymentmethod ,updatePermissionPaymentDB};

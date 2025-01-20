@@ -2,6 +2,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { sendEmail } from '../../subadmin/email/email.js';
 import { EmailBox } from '../../../models/email.js';
 import { notifyClient } from '../../../middlewares/websoket/index.js';
+import { PromotionOffers } from '../../../models/promotion.js';
+import { PromotionOffersSave } from '../../../models/promotionsave.js';
+import { Transactions } from '../../../models/transactions.js';
 
 const validateTransactionInfo = (transInfo) => {
     if (!transInfo || !transInfo.transactionType || !transInfo.amount || !transInfo.userNumber || !transInfo.authorId) {

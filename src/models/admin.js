@@ -25,7 +25,13 @@ const adminSchema = new mongoose.Schema({
   role: {
     type: String,
     default: 'subAdmin'
-  }
+  },
+  paymentPermissions: [
+    {
+      type: { type: String, required: true }, 
+      allowed: { type: Boolean, required: true }, 
+    },
+  ],
 });
 
 const Admin = mongoose.model('adminList', adminSchema);

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-import { getValue } from 'node-global-storage';
+import { getValue, setValue } from 'node-global-storage';
+import { Transactions } from '../models/transactions.js';
 
 
 class PaymentController {
@@ -24,17 +25,21 @@ class PaymentController {
 
   // Method to create payment
   async createPayment(req, res) {
-    const { amount, userId } = req.body;
+    const {userName,amount, ...extrainfo} = req.body;
 
-    console.log(amount, userId);
+     setValue("transactionInfoPay",{
+      userName ,
+      amount , 
+      ...extrainfo
+     })
 
     try {
       const { data } = await axios.post(
-        process.env.BKASH_CREATE_PAYMENT_URL,
+        process.env.bkash_create_payment_url,
         {
           mode: '0011',
-          payerReference: ' ',
-          callbackURL: `http://localhost:5000/bkash-callback-url`,  // Your callback URL
+          payerReference: '1',
+          callbackURL: process.env.CALL_BACK_URL, 
           amount,
           currency: 'BDT',
           intent: 'sale',
@@ -43,7 +48,6 @@ class PaymentController {
         { headers: await this.getBkashHeaders() }
       );
 
-      console.log(data, 'Check BKash payment data');
       if (data && data.bkashURL) {
         console.log(data.bkashURL,'check redirect link')
         return res.status(200).json({ redirectURL: data.bkashURL });
@@ -59,14 +63,13 @@ class PaymentController {
 
   // Method to handle BKash callback and redirect accordingly
   async handleCallback(req, res) {
-    const { paymentID, status } = req.query;
+    const { paymentID, status , signature } = req.query;
 
-    console.log('Callback received with status:', status);
 
     // If payment is canceled or failed, redirect to error page
     if (status === 'cancel' || status === 'failure') {
       console.log('Payment canceled or failed');
-      return res.redirect(`${process.env.FRONTEND_URL}/error?message=${status}`);
+      return res.redirect(`${process.env.FRONENT_APP_URL}/error?message=${status}`);
     }
 
     // If payment is successful, process the payment
@@ -80,10 +83,17 @@ class PaymentController {
 
         // Check if the payment was executed successfully
         if (data && data.statusCode === '0000') {
-      
+          const getValue = getValue("transactionInfoPay");
+          const CustomerInfo = {
+            transactionId:  paymentID,
+            isAutoPay: "automation",
+            ...getValue
+          }
 
+          //  transaction payment exute 
+          await Transactions.create(CustomerInfo);
           console.log('Payment successful, redirecting to success page');
-          return res.redirect(`http://localhost:5173/profile/user`);
+          return res.redirect(`${process.env.FRONENT_APP_URL}/profile/user`);
         } else {
           console.log('Payment failed:', data.statusMessage);
           return res.redirect(`${process.env.FRONTEND_URL}/error?message=${data.statusMessage}`);
@@ -93,7 +103,6 @@ class PaymentController {
         return res.redirect(`${process.env.FRONTEND_URL}/error?message=${error.message}`);
       }
     }
-
     // Handle unexpected status (for logging or debugging purposes)
     return res.redirect(`${process.env.FRONTEND_URL}/error?message=Unexpected status`);
   }

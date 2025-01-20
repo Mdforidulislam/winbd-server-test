@@ -1,8 +1,11 @@
 import { PaymentMethodActive } from "../../../models/paymentMethod.js";
+import { Transactions } from "../../../models/transactions.js";
+import { UserList } from "../../../models/users.js";
 
 
 const showNumberlib = async (author, userName) => {
     try {
+
         // Validate input parameters
         if (!author || !userName) {
             return { message: "Please provide valid author and userName" };
@@ -10,9 +13,8 @@ const showNumberlib = async (author, userName) => {
 
         // Fetch active payment methods for the author
         const activePaymentMethods = await PaymentMethodActive.find({ authorId: author, status: 'active' })
-            .select('number depositeChannel transactionMethod status note')
+            .select('number depositeChannel transactionMethod status note activePayMethod')
             .lean();
-
         // Get the user's phone number
         const user = await UserList.findOne({ userName: userName }, { phoneNumber: 1 }).lean();
 
@@ -35,6 +37,8 @@ const showNumberlib = async (author, userName) => {
             }
         });
 
+
+   
         // Check if there are active payment methods
         if (activePaymentMethods.length > 0) {
             return {

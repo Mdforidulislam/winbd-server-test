@@ -44,4 +44,6 @@ const getPaymentInstructions = async (channeltype) => {
     }
 };
 
+
+
 export { getPaymentInstructions, insertPaymentInstruction };

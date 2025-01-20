@@ -1,3 +1,4 @@
+import { Transactions } from "../../../models/transactions.js";
 
 
 // Helper function to format the date in 'dd/mm/yyyy' format
@@ -140,6 +141,7 @@ const userHistoryUpdateStatus = async (userName,searchList) => {
             data: groupedData[date]
         })).sort((a, b) => new Date(b.date) - new Date(a.date)); // Ensure the dates themselves are in descending order
 
+        console.log(finalResult)
         return { success: true, data: finalResult };
 
     } catch (error) {

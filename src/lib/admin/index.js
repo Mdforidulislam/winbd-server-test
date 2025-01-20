@@ -66,4 +66,64 @@ const getingAdminData = async (adminInfo) => {
     }
 }
 
-export { adminInsertList, getingAdminData };
+
+const singleSubAdmin = async (uniqueId) => {
+    if (!uniqueId) throw new Error("ID is required to fetch the sub-admin");
+    try {
+      const response = await Admin.findOne({
+        uniqueId
+      });
+      if (!response) throw new Error("Sub-admin not found");
+      return response;
+    } catch (error) {
+      throw new Error(`Error fetching sub-admin: ${error.message}`);
+    }
+  }
+
+// Helper function to update the payment method in the database
+const updatePaymentMethod = async (id, type) => {
+    console.log(id,type)
+    try {
+
+       const admin = await Admin.findById(id);
+
+       if (!admin) {
+         throw new Error("Admin not found.");
+       }
+   
+       console.log(admin)
+       // Find the payment permission for the specified type
+       const permission = admin.paymentPermissions.find((p) => p.type === type);
+   
+       if (!permission) {
+         throw new Error(`Payment type '${paymentType}' not found.`);
+       }
+   
+       // Toggle the `allowed` value
+       const newAllowedValue = !permission.allowed;
+   
+       // Update the document with the toggled value
+       const updatedAdmin = await Admin.findByIdAndUpdate(
+         id,
+         {
+           $set: {
+             "paymentPermissions.$[elem].allowed": newAllowedValue,
+           },
+         },
+         {
+           arrayFilters: [{ "elem.type": type }], // Match the specific type
+           new: true, // Return the updated document
+         }
+       );
+   
+       return updatedAdmin;
+
+
+    } catch (error) {
+      console.error("Error in updatePaymentMethod:", error.message);
+      throw error;
+    }
+  };
+  
+
+export { adminInsertList, getingAdminData ,updatePaymentMethod,singleSubAdmin};

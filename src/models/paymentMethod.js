@@ -5,44 +5,51 @@ const paymentMethodSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true
-    },
-    depositeChannel: {
+      },
+      depositeChannel: {
         type: String,
         required: true,
         trim: true
-    },
-    transactionMethod: {
+      },
+      transactionMethod: {
         type: String,
         required: true,
         trim: true,
         index: true
-    },
-    Logo: {
+      },
+      Logo: {
         type: String,
         required: true,
         trim: true
-    },
-    authorId: {
+      },
+      authorId: {
         type: String,
         required: true,
         index: true,
         trim: true
-    },
-    note: {
-        title: { type: String, required: true, trim: true },
+      },
+      note: {
+        title: { type: String, required: false, trim: true },
         list: [{ type: String, trim: true }],
-        remainder: { type: String, required: true, trim: true }
-    },
-    idNumber: {
+        remainder: { type: String, required: false, trim: true }
+      },
+      idNumber: {
         type: String,
         index: true
-    },
-    status: {
+      },
+      status: {
         type: String,
         default: 'deActive',
         trim: true,
         index: true
-    }
+      },
+
+      activePayMethod: [
+        {
+          type: { type: String, required: true },
+          allowed: { type: Boolean, required: true }
+        }
+      ]
 });
 
 // Compound index for authorId and transactionMethod
