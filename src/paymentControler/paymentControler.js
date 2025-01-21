@@ -96,15 +96,15 @@ class PaymentController {
           return res.redirect(`${process.env.FRONENT_APP_URL}/profile/user`);
         } else {
           console.log('Payment failed:', data.statusMessage);
-          return res.redirect(`${process.env.FRONTEND_URL}/error?message=${data.statusMessage}`);
+          return res.redirect(`${process.env.FRONENT_APP_URL}/error?message=${data.statusMessage}`);
         }
       } catch (error) {
         console.error('Error processing callback:', error.message);
-        return res.redirect(`${process.env.FRONTEND_URL}/error?message=${error.message}`);
+        return res.redirect(`${process.env.FRONENT_APP_URL}/error?message=${error.message}`);
       }
     }
     // Handle unexpected status (for logging or debugging purposes)
-    return res.redirect(`${process.env.FRONTEND_URL}/error?message=Unexpected status`);
+    return res.redirect(`${process.env.FRONENT_APP_URL}/error?message=Unexpected status`);
   }
 
   // Method to handle payment refund
