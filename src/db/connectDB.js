@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
-const MAX_RETRIES = 5; // Maximum retry attempts
-const RETRY_DELAY = 5000; // Delay between retries (in ms)
+const MAX_RETRIES = 5; 
+const RETRY_DELAY = 5000; 
 
 async function connectDB() {
     let attempts = 0;

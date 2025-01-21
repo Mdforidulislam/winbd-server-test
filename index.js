@@ -15,9 +15,15 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // Middleware setup
-app.use(cors({
-  origin: '*',  
-}));
+app.use(
+  cors({
+      origin: 'https://winbd-client-test-mr2d.vercel.app', 
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      credentials: true, 
+  })
+);
+
+
 app.use(compression()); // Enable gzip compression
 app.use(helmet()); // Use helmet for security headers
 app.use(bodyParser.json());
