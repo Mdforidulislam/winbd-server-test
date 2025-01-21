@@ -35,7 +35,7 @@ class PaymentController {
 
     try {
       const { data } = await axios.post(
-        process.env.bkash_create_payment_url,
+        "https://tokenized.pay.bka.sh/v1.2.0-beta/tokenized/checkout/create",
         {
           mode: '0011',
           payerReference: '1',
