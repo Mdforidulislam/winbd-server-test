@@ -9,7 +9,7 @@ async function connectDB() {
     while (attempts < MAX_RETRIES) {
         try {
             console.log(`Attempting to connect to the database (Attempt ${attempts + 1}/${MAX_RETRIES})...`);
-            const connection = await mongoose.connect(process.env.DATABASE_LOCAL);
+            const connection = await mongoose.connect("mongodb+srv://winbd12AB:ToSnmEhKJGbQgX1o@cluster0.fqgoqtg.mongodb.net/winbdDatabase?retryWrites=true&w=majority&appName=Cluster0");
             console.log(`MongoDB connected: ${connection.connection.host}`);
             return; // Exit the function once connected
         } catch (error) {
