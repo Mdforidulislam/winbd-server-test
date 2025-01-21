@@ -17,7 +17,7 @@ const port = process.env.PORT || 5000;
 // Middleware setup
 app.use(
   cors({
-      origin: "https://winbd-client-test-mr2d-oly2cn9bs-mdforidulislams-projects.vercel.app", 
+      origin: "https://winbd-client-fizf.vercel.app", 
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
       credentials: true, 
   })
