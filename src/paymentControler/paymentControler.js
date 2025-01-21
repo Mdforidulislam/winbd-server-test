@@ -19,7 +19,7 @@ class PaymentController {
       "Content-Type": "application/json",
       Accept: "application/json",
       authorization: getValue('id_token'),
-      'x-app-key': process.env.BKASH_API_KEY,
+      'x-app-key': "vftaa5mmyw08VdyibidRfvxAtc",
     };
   }
 
