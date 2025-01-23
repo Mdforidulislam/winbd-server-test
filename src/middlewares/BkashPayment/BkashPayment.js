@@ -12,7 +12,7 @@ const bkashPaymentAuth = async (req, res, next) => {
             username,
             password,
             api_key,
-            secret_keyg
+            secret_key
         } = await bashMarcentGetDB(authorId);
         
 
