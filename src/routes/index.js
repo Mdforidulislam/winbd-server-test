@@ -22,7 +22,7 @@ import { adminUserValidation } from '../middlewares/AdminUsersValidation/index.j
 import { bkashPaymentAuth } from '../middlewares/BkashPayment/BkashPayment.js';
 import PaymentController from '../paymentControler/paymentControler.js';
 import paymentControler from '../paymentControler/paymentControler.js';
-import { bkadhPaymentAPI, bkashConnectUserAPI, bkashMarcentGetAPI } from '../api/subAdmin/payment/bkash/index.js';
+import { bkadhPaymentAPI, bkashConnectUserAPI, bkashMarcentGetAPI, updateMerchentAPI } from '../api/subAdmin/payment/bkash/index.js';
 
 // import { insertDynamiceUrl, getingDynamicallyUrl } from '../api/admin/dynamiceUrl/dynamicUrl.js';
 // import { insertPayInstraction, getingPayInstraction } from '../api/admin/payInstraction.js';
@@ -111,6 +111,7 @@ router.get('/userValidation', adminUserValidation); // isRoleExite inside the da
 
 router.post("/marchent-add",bkadhPaymentAPI); // mercent add
 router.get("/margent-get", bkashMarcentGetAPI); // marcent get
+router.put("/marchent-update",updateMerchentAPI); // marchent update
 router.get("/connect-user",bkashConnectUserAPI); // connectUserAPI
 
 router.post("/bkash-payment-create",bkashPaymentAuth, PaymentController.createPayment);

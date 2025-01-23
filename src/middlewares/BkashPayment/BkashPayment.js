@@ -1,23 +1,40 @@
 import axios from 'axios';
 import { setValue } from 'node-global-storage';
-import { v4 as uuidv4 } from 'uuid';
+import Bkash from '../../models/bkashCC.js';
 
 const bkashPaymentAuth = async (req, res, next) => {
-
+        
     try {
-        const { data } = await axios.post(process.env.bkash_grant_token_url, {
-            app_key: process.env.bkash_api_key,
-            app_secret: process.env.bkash_secret_key,
+        const {authorId,...info} = req.body;
+        const {
+            marchent_Id,
+            username,
+            password,
+            api_key,
+            secret_key
+        } = await Bkash.findOne({marchent_Id: authorId})
+
+
+        console.log( marchent_Id,
+            username,
+            password,
+            api_key,
+            secret_key)
+
+        const { data } = await axios.post("https://tokenized.pay.bka.sh/v1.2.0-beta/tokenized/checkout/token/grant", {
+            app_key: api_key,
+            app_secret: secret_key,
         }, {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
-                username: process.env.bkash_username,
-                password: process.env.bkash_password,
+                username: username,
+                password: password,
             }
         });
 
         setValue('id_token', data.id_token);
+        setValue("api-key",api_key)
 
         next();
     } catch (error) {

@@ -56,7 +56,7 @@ const transactionSchema = new mongoose.Schema({
     },
     isAutoPay: {
         type: Boolean,
-        default: "manual"
+        default: false
     },
     requestStatus: {
         type: String,

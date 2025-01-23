@@ -39,6 +39,7 @@ const transactionRequestDeposite = async (authorId) => {
             return { message: "No payment method request inside the database." };
         }
 
+        console.log(matchAuthorData)
         // Fetch old turnover records
         const oldTurnover = await PromotionOffersSave.find({ authorId: authorId })
         .select('_id turnover offerAmount title')
@@ -67,6 +68,7 @@ const transactionRequestDeposite = async (authorId) => {
                     paymentChannel: item.paymentChannel,
                     TimeDay: formatTime(item.createdAt),
                     statusNote: item.statusNote,
+                    autoPay: item.isAutoPay,
                     transactionImage: item.transactionImage,
                     offerAmount,
                     totalAmount

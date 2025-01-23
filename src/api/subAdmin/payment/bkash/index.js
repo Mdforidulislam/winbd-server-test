@@ -1,11 +1,11 @@
-import { bashMarcentGetDB, bkashConnectUserDB, bkashMarcentAdd } from "../../../../lib/subadmin/payment/bkash/index.js";
+import { bashMarcentGetDB, bkashConnectUserDB, bkashMarcentAdd, UpdateMarcentInfoDB } from "../../../../lib/subadmin/payment/bkash/index.js";
 
 
 // Route Handlers
 const bkadhPaymentAPI = async (req, res) => {
     try {
         const { marchentinfo } = req.body;
-        console.log(marchentinfo,'check the marchent info here !!')
+     
 
         if (!marchentinfo) {
             return res.status(400).json({
@@ -31,15 +31,17 @@ const bkadhPaymentAPI = async (req, res) => {
 
 const bkashMarcentGetAPI = async (req, res) => {
     try {
-        const { marchent_id } = req.query;
-        if (!marchent_id) {
+        const { marchent_Id } = req.query;
+    
+
+        if (!marchent_Id) {
             return res.status(400).json({
                 message: "Invalid request. 'marchent_id' is required",
                 status: 400,
             });
         }
 
-        const result = await bashMarcentGetDB(marchent_id);
+        const result = await bashMarcentGetDB(marchent_Id);
         if (!result) {
             return res.status(404).json({
                 message: "Merchant not found",
@@ -60,6 +62,29 @@ const bkashMarcentGetAPI = async (req, res) => {
         });
     }
 };
+
+const updateMerchentAPI = async (req, res) => {
+    try {
+        const { marchentinfo } = req.body;
+        
+
+        const response = await UpdateMarcentInfoDB(marchentinfo);
+
+        res.status(200).json({
+            message: 'Merchant information updated successfully',
+            status: 200,
+            data: response,
+        });
+    } catch (error) {
+        console.error("Error in updateMerchentAPI:", error);
+        res.status(500).json({
+            message: "An error occurred while updating merchant information",
+            error: error.message,
+        });
+    }
+};
+
+
 
 const bkashConnectUserAPI = async (req, res) => {
     try {
@@ -93,4 +118,4 @@ const bkashConnectUserAPI = async (req, res) => {
     }
 };
 
-export { bkadhPaymentAPI, bkashMarcentGetAPI, bkashConnectUserAPI };
+export { bkadhPaymentAPI, bkashMarcentGetAPI, bkashConnectUserAPI ,updateMerchentAPI};

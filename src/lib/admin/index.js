@@ -38,7 +38,7 @@ const adminInsertList = async (adminInfo) => {
 // geting data to database 
 const getingAdminData = async (adminInfo) => {
     try {
-        console.log('call api');
+     
         // object  value is missing validation
         if (Object.keys(adminInfo).length === 0) {
             return { message: "please provide required data" };
@@ -53,10 +53,10 @@ const getingAdminData = async (adminInfo) => {
             }
         }
 
-        console.log(adminInfo);
+      
         // geting data to database 
         const getingAdmin = await Admin.findOne();
-        console.log(getingAdmin);
+       
         // check the data , validation 
         if (getingAdmin && Object.values(getingAdmin).length > 0) {
             return { message: 'welcome admin role', name: getingAdmin.adminName, phoneNumber: getingAdmin.phoneNumber };

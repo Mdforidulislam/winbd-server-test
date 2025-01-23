@@ -19,7 +19,7 @@ class PaymentController {
       "Content-Type": "application/json",
       Accept: "application/json",
       authorization: getValue('id_token'),
-      'x-app-key': "vftaa5mmyw08VdyibidRfvxAtc",
+      'x-app-key': getValue("api-key"),
     };
   }
 
@@ -39,8 +39,8 @@ class PaymentController {
         {
           mode: '0011',
           payerReference: '1',
-          callbackURL: process.env.CALL_BACK_URL, 
-          amount,
+          callbackURL:"http://localhost:5000/bkash-callback-url", 
+          amount:5,
           currency: 'BDT',
           intent: 'sale',
           merchantInvoiceNumber: `Inv${uuidv4().substring(0, 5)}`,
@@ -49,7 +49,7 @@ class PaymentController {
       );
 
       if (data && data.bkashURL) {
-        console.log(data.bkashURL,'check redirect link')
+
         return res.status(200).json({ redirectURL: data.bkashURL });
       } else {
         return res.status(500).json({ error: 'Failed to create payment, no redirect URL.' });
@@ -69,42 +69,45 @@ class PaymentController {
     // If payment is canceled or failed, redirect to error page
     if (status === 'cancel' || status === 'failure') {
       console.log('Payment canceled or failed');
-      return res.redirect(`${process.env.FRONENT_APP_URL}/error?message=${status}`);
+      return res.redirect(`http://localhost:5173`);
     }
 
     // If payment is successful, process the payment
     if (status === 'success') {
       try {
         const { data } = await axios.post(
-          process.env.BKASH_EXECUTE_PAYMENT_URL,
+          "https://tokenized.pay.bka.sh/v1.2.0-beta/tokenized/checkout/execute",
           { paymentID },
           { headers: await this.getBkashHeaders() }
         );
 
         // Check if the payment was executed successfully
         if (data && data.statusCode === '0000') {
-          const getValue = getValue("transactionInfoPay");
+          const getValueTransaction = getValue("transactionInfoPay");
           const CustomerInfo = {
             transactionId:  paymentID,
-            isAutoPay: "automation",
-            ...getValue
+            isAutoPay: true,
+            ...getValueTransaction
           }
 
           //  transaction payment exute 
-          await Transactions.create(CustomerInfo);
+       const transaction = await Transactions.create(CustomerInfo);
+
+       console.log(transaction,'check the transaction here !!');
+
           console.log('Payment successful, redirecting to success page');
-          return res.redirect(`${process.env.FRONENT_APP_URL}/profile/user`);
+          return res.redirect(`http://localhost:5173/profile/user`);
         } else {
           console.log('Payment failed:', data.statusMessage);
-          return res.redirect(`${process.env.FRONENT_APP_URL}/error?message=${data.statusMessage}`);
+          return res.redirect(`http://localhost:5173`);
         }
       } catch (error) {
         console.error('Error processing callback:', error.message);
-        return res.redirect(`${process.env.FRONENT_APP_URL}/error?message=${error.message}`);
+        return res.redirect(`http://localhost:5173`);
       }
     }
     // Handle unexpected status (for logging or debugging purposes)
-    return res.redirect(`${process.env.FRONENT_APP_URL}/error?message=Unexpected status`);
+    return res.redirect(`http://localhost:5173`);
   }
 
   // Method to handle payment refund

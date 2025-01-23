@@ -4,7 +4,7 @@ import { transactionRequestDeposite, transactionRequestWithdraw, transactionRest
 
 const getingTransactionRequestDeposite = async (req, res) => {
     try {
-        console.log(req.query.authurId, 'check the author');
+    
         const authorId = req.query.authurId;
         const finalResult = await transactionRequestDeposite(authorId);
         res.status(200).json(finalResult);

@@ -3,7 +3,7 @@ import { transactionHistory } from "../../../lib/subadmin/transactionRequest/his
 // geting history value 
 const getingHistoryapi = async (req, res) => {
     try {
-        console.log('call the api');
+  
         const atuhorId = req.query.authorId;
         const date = req.query.date;
         const userName = req.query.userName;

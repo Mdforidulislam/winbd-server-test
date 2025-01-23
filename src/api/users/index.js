@@ -21,7 +21,7 @@ const userInsert = async(req,res)=>{
 const getingUsersData = async (req, res) => {
     try {
         const username = req.query.userName;
-        console.log(username, req.query);
+  
         const resutl = await getingRegUser(username); // call the function for geting user data list 
         res.status(200).json(resutl)
 

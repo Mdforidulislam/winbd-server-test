@@ -3,31 +3,36 @@ import bcrypt from "bcrypt";
 
 const bkashSchema = new mongoose.Schema(
   {
-    marchent_id: {
+
+    marchent_Id: {
       type: String,
       required: true,
       trim: true,
-      unique: true, // Automatically creates a unique index
+      unique: true, 
     },
-    bkash_username: {
+    username: {
       type: String,
       required: true,
     },
-    bkash_password: {
+    password: {
       type: String,
       required: true,
     },
-    bkash_api_key: {
+    api_key: {
       type: String,
       required: true,
     },
-    bkash_secret_key: {
+    secret_key: {
       type: String,
       required: true,
     },
+    method: {
+      type: String,
+      required: true,
+    }
   },
   {
-    timestamps: true, // Add createdAt and updatedAt
+    timestamps: true,
   }
 );
 
