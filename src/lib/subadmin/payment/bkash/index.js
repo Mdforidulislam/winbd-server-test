@@ -20,7 +20,7 @@ const bkashMarcentAdd = async (marchentinfo) => {
 const bashMarcentGetDB = async (marchent_Id) => {
     try {
         // Fetch merchant details from the database
-        const response = await Bkash.findOne({ marchent_Id });
+        const response = await Bkash.findOne({ marchent_Id }).select("+password +api_key +secret_key");
         
         if (!response) {
             console.log(`No merchant found for ID: ${marchent_Id}`);

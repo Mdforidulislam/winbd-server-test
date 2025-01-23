@@ -56,14 +56,7 @@ bkashSchema.pre("save", async function (next) {
   }
 });
 
-// Exclude sensitive fields from the response
-bkashSchema.methods.toJSON = function () {
-  const obj = this.toObject();
-  delete obj.password;
-  delete obj.api_key;
-  delete obj.secret_key;
-  return obj;
-};
+
 
 const Bkash = mongoose.model("Bkash", bkashSchema);
 
