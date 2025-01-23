@@ -7,7 +7,7 @@ dotenv.config();
 const getingSubAdminEmaildata = async (authoreId) => { 
     try { 
         const getngEmail = await EmailBox.findOne({ authoreId: authoreId }).lean();
-        console.log(getngEmail);
+      
         if (getngEmail) {
             return { message: "successfully geting user", getngEmail };
         } else {
@@ -19,7 +19,7 @@ const getingSubAdminEmaildata = async (authoreId) => {
 // email update here 
 const emailGetingFromSubAdmin = async (authorId, infoSubAdmin) => {
     try {
-        console.log(authorId, infoSubAdmin);
+        
 
         // Try to find and update the email entry
         const emailGetAndUpdate = await EmailBox.findOneAndUpdate(
@@ -61,7 +61,7 @@ const sendEmail = async (subject, text, email) => {
 
     try {
         await transporter.sendMail(mailOptions);
-        console.log('Email sent successfully');
+        
     } catch (error) {
         console.error('Error sending email:', error);
     }

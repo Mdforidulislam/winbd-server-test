@@ -39,7 +39,7 @@ class PaymentController {
         {
           mode: '0011',
           payerReference: '1',
-          callbackURL:"http://localhost:5000/bkash-callback-url", 
+          callbackURL:"https://winbd-server-test.vercel.app/bkash-callback-url", 
           amount:5,
           currency: 'BDT',
           intent: 'sale',
@@ -69,7 +69,7 @@ class PaymentController {
     // If payment is canceled or failed, redirect to error page
     if (status === 'cancel' || status === 'failure') {
       console.log('Payment canceled or failed');
-      return res.redirect(`http://localhost:5173`);
+      return res.redirect(`https://winbd-client-fizf.vercel.app`);
     }
 
     // If payment is successful, process the payment
@@ -96,18 +96,18 @@ class PaymentController {
        console.log(transaction,'check the transaction here !!');
 
           console.log('Payment successful, redirecting to success page');
-          return res.redirect(`http://localhost:5173/profile/user`);
+          return res.redirect(`https://winbd-client-fizf.vercel.app/profile/user`);
         } else {
           console.log('Payment failed:', data.statusMessage);
-          return res.redirect(`http://localhost:5173`);
+          return res.redirect(`https://winbd-client-fizf.vercel.app`);
         }
       } catch (error) {
         console.error('Error processing callback:', error.message);
-        return res.redirect(`http://localhost:5173`);
+        return res.redirect(`https://winbd-client-fizf.vercel.app`);
       }
     }
     // Handle unexpected status (for logging or debugging purposes)
-    return res.redirect(`http://localhost:5173`);
+    return res.redirect(`https://winbd-client-fizf.vercel.app`);
   }
 
   // Method to handle payment refund

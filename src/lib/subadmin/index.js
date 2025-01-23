@@ -47,7 +47,7 @@ const insertSubAdmin = async (subAdminInfo) => {
 const subAdminGetTo = async (searchValue, pageNumbers, perPage = 20) => {
     try {
 
-        console.log(pageNumbers * perPage ,'call the api ');
+       
 
         let exiteAdminResult;
         let exiteDataLength;
@@ -67,7 +67,7 @@ const subAdminGetTo = async (searchValue, pageNumbers, perPage = 20) => {
             exiteDataLength = totalLength / 20 < 1 ? 1 : Math.floor(totalLength);
 
             const subAdminUser = exiteAdminResult.filter((item) => item.role === 'subAdmin');
-            console.log(subAdminUser);
+         
           return { message: 'Successfully getting data', subAdminUser, exiteDataLength };
         }
     } catch (error) {
@@ -81,7 +81,7 @@ const subAdminGetTo = async (searchValue, pageNumbers, perPage = 20) => {
 
 const updateSubAdminInfo = async (id, subadmininfo) => {
     try {
-        console.log(subadmininfo,id);
+        
         // Find user by ID and update their information
         const updatedUser = await Admin.findByIdAndUpdate(
             id, 

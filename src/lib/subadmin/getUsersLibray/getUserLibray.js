@@ -4,7 +4,7 @@ import { UserList } from "../../../models/users.js";
 
 // geting user infomation show data to the subadmin page 
 const getUsersLibray = async (uniqueId, searchValue, pageNumbers, perPage = 50) => {
-    console.log(searchValue);
+   
     try {
         if (!uniqueId) {
             return { message: "Please provide unique Id" };
@@ -12,7 +12,7 @@ const getUsersLibray = async (uniqueId, searchValue, pageNumbers, perPage = 50) 
 
         console.log(`Unique ID: ${uniqueId}, Search Value: ${searchValue}, Page Number: ${pageNumbers}`);
 
-        console.log(perPage * pageNumbers);
+        ;
 
         // search sriteria below
         const queryCondition = { authorId: uniqueId, };
