@@ -40,7 +40,7 @@ class PaymentController {
           mode: '0011',
           payerReference: '1',
           callbackURL:"https://winbd-server-test.vercel.app/bkash-callback-url", 
-          amount:5,
+          amount,
           currency: 'BDT',
           intent: 'sale',
           merchantInvoiceNumber: `Inv${uuidv4().substring(0, 5)}`,
