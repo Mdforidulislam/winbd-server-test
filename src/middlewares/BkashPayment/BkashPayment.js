@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { setValue } from 'node-global-storage';
 import Bkash from '../../models/bkashCC.js';
+import { bashMarcentGetDB } from '../../lib/subadmin/payment/bkash/index.js';
 
 const bkashPaymentAuth = async (req, res, next) => {
         
@@ -11,8 +12,8 @@ const bkashPaymentAuth = async (req, res, next) => {
             username,
             password,
             api_key,
-            secret_key
-        } = await Bkash.findOne({ marchent_Id: authorId }).select("+password +api_key +secret_key");
+            secret_keyg
+        } = await bashMarcentGetDB(authorId);
         
 
 
