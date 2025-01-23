@@ -3,6 +3,7 @@ import Bkash from "../../../../models/bkashCC.js";
 
 const bkashMarcentAdd = async (marchentinfo) => {
     try {
+        console.log(marchentinfo)
         const response = await Bkash.create(marchentinfo);
         return response;
     } catch (error) {

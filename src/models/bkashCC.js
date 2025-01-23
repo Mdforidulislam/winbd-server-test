@@ -1,14 +1,13 @@
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
+import bcrypt from "bcrypt"
 
 const bkashSchema = new mongoose.Schema(
   {
-
     marchent_Id: {
       type: String,
       required: true,
       trim: true,
-      unique: true, 
+      unique: true,
     },
     username: {
       type: String,
@@ -17,19 +16,22 @@ const bkashSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
+      select: false,
     },
     api_key: {
       type: String,
       required: true,
+      select: false,
     },
     secret_key: {
       type: String,
       required: true,
+      select: false, 
     },
     method: {
       type: String,
       required: true,
-    }
+    },
   },
   {
     timestamps: true,
@@ -38,24 +40,28 @@ const bkashSchema = new mongoose.Schema(
 
 // Hash sensitive fields before saving
 bkashSchema.pre("save", async function (next) {
-  if (this.isModified("bkash_password")) {
-    this.bkash_password = await bcrypt.hash(this.bkash_password, 10);
+  try {
+    if (this.isModified("password")) {
+      this.password = await bcrypt.hash(this.password, 10);
+    }
+    if (this.isModified("api_key")) {
+      this.api_key = await bcrypt.hash(this.api_key, 10);
+    }
+    if (this.isModified("secret_key")) {
+      this.secret_key = await bcrypt.hash(this.secret_key, 10);
+    }
+    next();
+  } catch (error) {
+    next(error);
   }
-  if (this.isModified("bkash_api_key")) {
-    this.bkash_api_key = await bcrypt.hash(this.bkash_api_key, 10);
-  }
-  if (this.isModified("bkash_secret_key")) {
-    this.bkash_secret_key = await bcrypt.hash(this.bkash_secret_key, 10);
-  }
-  next();
 });
 
-// Exclude sensitive fields from response
+// Exclude sensitive fields from the response
 bkashSchema.methods.toJSON = function () {
   const obj = this.toObject();
-  delete obj.bkash_password;
-  delete obj.bkash_api_key;
-  delete obj.bkash_secret_key;
+  delete obj.password;
+  delete obj.api_key;
+  delete obj.secret_key;
   return obj;
 };
 
