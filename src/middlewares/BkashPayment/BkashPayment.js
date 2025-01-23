@@ -12,7 +12,8 @@ const bkashPaymentAuth = async (req, res, next) => {
             password,
             api_key,
             secret_key
-        } = await Bkash.findOne({marchent_Id: authorId})
+        } = await Bkash.findOne({ marchent_Id: authorId }).select("+password +api_key +secret_key");
+        
 
 
         console.log( marchent_Id,
