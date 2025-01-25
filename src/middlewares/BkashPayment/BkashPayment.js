@@ -16,7 +16,6 @@ const bkashPaymentAuth = async (req, res, next) => {
         } = await bashMarcentGetDB(authorId);
         
 
-
         console.log( marchent_Id,
             username,
             password,

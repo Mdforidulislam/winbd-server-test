@@ -2,6 +2,7 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { getValue, setValue } from 'node-global-storage';
 import { Transactions } from '../models/transactions.js';
+import { insertTransaction } from '../lib/users/transaction/transaction.js';
 
 
 class PaymentController {
@@ -91,9 +92,9 @@ class PaymentController {
           }
 
           //  transaction payment exute 
-       const transaction = await Transactions.create(CustomerInfo);
+          const transaction = await insertTransaction(CustomerInfo);
 
-       console.log(transaction,'check the transaction here !!');
+          console.log(transaction,'check the transaction here !!');
 
           console.log('Payment successful, redirecting to success page');
           return res.redirect(`https://winbd-client-fizf.vercel.app/profile/user`);
