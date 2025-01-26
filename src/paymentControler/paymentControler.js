@@ -87,6 +87,7 @@ class PaymentController {
           const CustomerInfo = {
             transactionId:  paymentID,
             isAutoPay: true,
+            transactionType: 'deposite',
             ...getValueTransaction
           }
 
