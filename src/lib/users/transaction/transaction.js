@@ -33,8 +33,6 @@ const calculatePromotionOffers = async (transInfo) => {
                 if (!isNaN(promotionOffers.turnover)) {
                     turnover = offerAmount + transInfo.amount * parseInt(promotionOffers.turnover);
                 }
-
-
                 // Create the promotion data to be saved
                 return {
                     title: item.title,

@@ -3,7 +3,7 @@ import Bkash from "../../../../models/bkashCC.js";
 
 const bkashMarcentAdd = async (marchentinfo) => {
     try {
-        console.log(marchentinfo)
+
         const response = await Bkash.create(marchentinfo);
         return response;
     } catch (error) {
@@ -26,8 +26,6 @@ const bashMarcentGetDB = async (marchent_Id) => {
             console.log(`No merchant found for ID: ${marchent_Id}`);
             return null;
         }
-
-        console.log(response)
 
        return response;
     } catch (error) {

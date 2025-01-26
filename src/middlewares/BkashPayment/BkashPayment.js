@@ -7,6 +7,7 @@ const bkashPaymentAuth = async (req, res, next) => {
         
     try {
         const {authorId,...info} = req.body;
+        
         const {
             marchent_Id,
             username,
@@ -16,15 +17,17 @@ const bkashPaymentAuth = async (req, res, next) => {
         } = await bashMarcentGetDB(authorId);
         
 
-        console.log( marchent_Id,
+        console.log( 
+            marchent_Id,
             username,
             password,
             api_key,
             secret_key,
-            authorId
+            authorId,
+        "bkashPaymentAuth"
         )
 
-        const { data } = await axios.post("https://tokenized.pay.bka.sh/v1.2.0-beta/tokenized/checkout/token/grant", {
+        const { data } = await axios.post("https://tokenized.sandbox.bka.sh/v1.2.0-beta/tokenized/checkout/token/grant", {
             app_key: api_key,
             app_secret: secret_key,
         }, {
