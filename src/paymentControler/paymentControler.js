@@ -33,13 +33,14 @@ class PaymentController {
       ...extrainfo
      })
 
+
     try {
       const { data } = await axios.post(
-        "https://tokenized.sandbox.bka.sh/v1.2.0-beta/tokenized/checkout/create",
+        "https://tokenized.pay.bka.sh/v1.2.0-beta/tokenized/checkout/create",
         {
           mode: '0011',
           payerReference: '1',
-          callbackURL:"http://localhost:5000/bkash-callback-url", 
+          callbackURL:"https://winbd-server-test.vercel.app/bkash-callback-url", 
           amount,
           currency: 'BDT',
           intent: 'sale',
@@ -75,7 +76,7 @@ class PaymentController {
     if (status === 'success') {
       try {
         const { data } = await axios.post(
-          "https://tokenized.sandbox.bka.sh/v1.2.0-beta/tokenized/checkout/execute",
+          "https://tokenized.pay.bka.sh/v1.2.0-beta/tokenized/checkout/execute",
           { paymentID },
           { headers: await this.getBkashHeaders() }
         );
@@ -86,24 +87,23 @@ class PaymentController {
           const CustomerInfo = {
             transactionId:  paymentID,
             isAutoPay: true,
-            transactionType: 'deposite',
             ...getValueTransaction
           }
 
           console.log(CustomerInfo,'check all the type here !!')
           //  transaction payment exute 
           const transaction = await Transactions.create(CustomerInfo);
-          console.log(transaction,'check the transaction here !!');
+
 
           console.log('Payment successful, redirecting to success page');
           return res.redirect(`https://winbd-client-fizf.vercel.app/profile/user`);
         } else {
           console.log('Payment failed:', data.statusMessage);
-          return res.redirect(`http://localhost:5173/profile/user`);
+          return res.redirect(`https://winbd-client-fizf.vercel.app/profile/user`);
         }
       } catch (error) {
         console.error('Error processing callback:', error.message);
-        return res.redirect(`https://winbd-client-fizf.vercel.app`);
+        return res.redirect(`https://winbd-client-fizf.vercel.app/profile/user`);
       }
     }
 
