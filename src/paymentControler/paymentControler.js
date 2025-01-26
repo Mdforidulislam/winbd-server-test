@@ -36,7 +36,7 @@ class PaymentController {
 
     try {
       const { data } = await axios.post(
-        "https://tokenized.sandbox.bka.sh/v1.2.0-beta/tokenized/checkout/create",
+        "https://tokenized.pay.bka.sh/v1.2.0-beta/tokenized/checkout/create",
         {
           mode: '0011',
           payerReference: '1',
@@ -76,7 +76,7 @@ class PaymentController {
     if (status === 'success') {
       try {
         const { data } = await axios.post(
-          "https://tokenized.sandbox.bka.sh/v1.2.0-beta/tokenized/checkout/execute",
+          "https://tokenized.pay.bka.sh/v1.2.0-beta/tokenized/checkout/execute",
           { paymentID },
           { headers: await this.getBkashHeaders() }
         );

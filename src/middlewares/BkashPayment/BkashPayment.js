@@ -27,7 +27,7 @@ const bkashPaymentAuth = async (req, res, next) => {
         "bkashPaymentAuth"
         )
 
-        const { data } = await axios.post("https://tokenized.sandbox.bka.sh/v1.2.0-beta/tokenized/checkout/token/grant", {
+        const { data } = await axios.post("https://tokenized.pay.bka.sh/v1.2.0-beta/tokenized/checkout/token/grant", {
             app_key: api_key,
             app_secret: secret_key,
         }, {
