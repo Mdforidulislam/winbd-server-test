@@ -36,7 +36,7 @@ class PaymentController {
 
     try {
       const { data } = await axios.post(
-        "https://tokenized.pay.bka.sh/v1.2.0-beta/tokenized/checkout/create",
+        "https://tokenized.sandbox.bka.sh/v1.2.0-beta/tokenized/checkout/create",
         {
           mode: '0011',
           payerReference: '1',
@@ -76,7 +76,7 @@ class PaymentController {
     if (status === 'success') {
       try {
         const { data } = await axios.post(
-          "https://tokenized.pay.bka.sh/v1.2.0-beta/tokenized/checkout/execute",
+          "https://tokenized.sandbox.bka.sh/v1.2.0-beta/tokenized/checkout/execute",
           { paymentID },
           { headers: await this.getBkashHeaders() }
         );
@@ -93,7 +93,7 @@ class PaymentController {
           console.log(CustomerInfo,'check all the type here !!')
           //  transaction payment exute 
           const transaction = await Transactions.create(CustomerInfo);
-
+          console.log(transaction,'check all the type here  successfuly transaction!!')
 
           console.log('Payment successful, redirecting to success page');
           return res.redirect(`https://winbd-client-fizf.vercel.app/profile/user`);
