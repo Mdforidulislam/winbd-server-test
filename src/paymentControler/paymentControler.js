@@ -51,6 +51,8 @@ class PaymentController {
 
       if (data && data.bkashURL) {
 
+        console.log(data,'check the payment create');
+
         return res.status(200).json({ redirectURL: data.bkashURL });
       } else {
         return res.status(500).json({ error: 'Failed to create payment, no redirect URL.' });
@@ -64,7 +66,10 @@ class PaymentController {
 
   // Method to handle BKash callback and redirect accordingly
   async handleCallback(req, res) {
-    const { paymentID, status , signature } = req.query;
+    const data = req.query;
+    const {paymentID, status} = data;
+
+
 
     // If payment is canceled or failed, redirect to error page
     if (status === 'cancel' || status === 'failure') {
@@ -80,6 +85,8 @@ class PaymentController {
           { paymentID },
           { headers: await this.getBkashHeaders() }
         );
+
+        console.log(data,'check the payment execute')
 
         // Check if the payment was executed successfully
         if (data && data.statusCode === '0000') {

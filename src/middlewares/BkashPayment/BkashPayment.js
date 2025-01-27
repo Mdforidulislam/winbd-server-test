@@ -42,6 +42,8 @@ const bkashPaymentAuth = async (req, res, next) => {
         setValue('id_token', data.id_token);
         setValue("api-key",api_key)
 
+        console.log(data,'check the reposne token')
+
         next();
     } catch (error) {
         return res.status(401).json({ error: error.message });
