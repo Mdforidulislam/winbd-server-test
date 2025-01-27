@@ -40,7 +40,7 @@ class PaymentController {
         {
           mode: '0011',
           payerReference: '1',
-          callbackURL:"https://winbd-server-test.vercel.app/bkash-callback-url", 
+          callbackURL:"http://localhost:5000/bkash-callback-url", 
           amount,
           currency: 'BDT',
           intent: 'sale',
