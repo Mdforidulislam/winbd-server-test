@@ -1,4 +1,5 @@
 import exiteUser from "../../../middlewares/exiteUser.js";
+import { UserList } from "../../../models/users.js";
 
 
 // insert data to databse 

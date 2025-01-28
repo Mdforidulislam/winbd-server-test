@@ -1,7 +1,19 @@
 import axios from 'axios';
+import axiosRetry from 'axios-retry';
 import { v4 as uuidv4 } from 'uuid';
 import { getValue, setValue } from 'node-global-storage';
 import { Transactions } from '../models/transactions.js';
+
+// Configure axios to retry failed requests
+axiosRetry(axios, { 
+  retries: 3, 
+  retryDelay: (retryCount) => retryCount * 1000, 
+  retryCondition: (error) => {
+    // Retry on network or 5xx server errors
+    return axiosRetry.isNetworkOrIdempotentRequestError(error) || 
+           error.response?.status >= 500;
+  } 
+});
 
 
 class PaymentController {
@@ -34,13 +46,14 @@ class PaymentController {
      })
 
 
+     console.log('check next middleware perfactly run ')
     try {
       const { data } = await axios.post(
         "https://tokenized.pay.bka.sh/v1.2.0-beta/tokenized/checkout/create",
         {
           mode: '0011',
           payerReference: '1',
-          callbackURL:"http://localhost:5000/bkash-callback-url", 
+          callbackURL:"https://winbd-server-test.vercel.app/bkash-callback-url", 
           amount,
           currency: 'BDT',
           intent: 'sale',
@@ -50,6 +63,7 @@ class PaymentController {
       );
 
       if (data && data.bkashURL) {
+
 
         console.log(data,'check the payment create');
 
