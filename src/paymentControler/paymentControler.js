@@ -35,7 +35,7 @@ class PaymentController {
       ...extrainfo
     });
   
-    console.log('check next middleware perfactly run ');
+    console.log('check next middleware perfactly run ',userName, amount);
   
     const maxRetries = 3; // Number of retry attempts
     let attempt = 0;
