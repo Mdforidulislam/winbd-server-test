@@ -62,6 +62,7 @@ class PaymentController {
           { headers: await this.getBkashHeaders() }
         );
   
+        console.log(data,'check the payment create response=============>')
         // Check if the response has the `bkashURL`
         if (data && data.bkashURL) {
           console.log('Payment created successfully, redirecting to:', data.bkashURL);
