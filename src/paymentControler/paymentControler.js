@@ -53,7 +53,7 @@ class PaymentController {
         {
           mode: '0011',
           payerReference: '1',
-          callbackURL:"https://winbd-server-test.vercel.app/bkash-callback-url", 
+          callbackURL:"https://server.winpay.online/bkash-callback-url", 
           amount,
           currency: 'BDT',
           intent: 'sale',
@@ -88,7 +88,7 @@ class PaymentController {
     // If payment is canceled or failed, redirect to error page
     if (status === 'cancel' || status === 'failure') {
       console.log('Payment canceled or failed');
-      return res.redirect(`https://winbd-client-fizf.vercel.app`);
+      return res.redirect(`https://winpay.online`);
     }
 
     // If payment is successful, process the payment
@@ -118,20 +118,20 @@ class PaymentController {
           console.log(transaction,'check all the type here  successfuly transaction!!')
 
           console.log('Payment successful, redirecting to success page');
-          return res.redirect(`https://winbd-client-fizf.vercel.app/profile/user`);
+          return res.redirect(`https://winpay.online/profile/user`);
         } else {
           console.log('Payment failed:', data.statusMessage);
-          return res.redirect(`https://winbd-client-fizf.vercel.app/profile/user`);
+          return res.redirect(`https://winpay.online/profile/user`);
         }
       } catch (error) {
         console.error('Error processing callback:', error.message);
-        return res.redirect(`https://winbd-client-fizf.vercel.app/profile/user`);
+        return res.redirect(`https://winpay.online/profile/user`);
       }
     }
 
     console.log('check is return call back')
     // Handle unexpected status (for logging or debugging purposes)
-    return res.redirect(`https://winbd-client-fizf.vercel.app`);
+    return res.redirect(`https://winpay.online`);
   }
 
   // Method to handle payment refund
