@@ -1,19 +1,8 @@
 import axios from 'axios';
-import axiosRetry from 'axios-retry';
 import { v4 as uuidv4 } from 'uuid';
 import { getValue, setValue } from 'node-global-storage';
 import { Transactions } from '../models/transactions.js';
 
-// Configure axios to retry failed requests
-axiosRetry(axios, { 
-  retries: 3, 
-  retryDelay: (retryCount) => retryCount * 1000, 
-  retryCondition: (error) => {
-    // Retry on network or 5xx server errors
-    return axiosRetry.isNetworkOrIdempotentRequestError(error) || 
-           error.response?.status >= 500;
-  } 
-});
 
 
 class PaymentController {
@@ -35,46 +24,69 @@ class PaymentController {
     };
   }
 
-  // Method to create payment
   async createPayment(req, res) {
-    const {userName,amount, ...extrainfo} = req.body;
 
-     setValue("transactionInfoPay",{
-      userName ,
-      amount , 
+    const { userName, amount, ...extrainfo } = req.body;
+  
+    // Set transaction info for later use or logging
+    setValue("transactionInfoPay", {
+      userName,
+      amount,
       ...extrainfo
-     })
-
-
-     console.log('check next middleware perfactly run ')
-    try {
-      const { data } = await axios.post(
-        "https://tokenized.pay.bka.sh/v1.2.0-beta/tokenized/checkout/create",
-        {
-          mode: '0011',
-          payerReference: '1',
-          callbackURL:"https://server.winpay.online/bkash-callback-url", 
-          amount,
-          currency: 'BDT',
-          intent: 'sale',
-          merchantInvoiceNumber: `Inv${uuidv4().substring(0, 5)}`,
-        },
-        { headers: await this.getBkashHeaders() }
-      );
-
-      if (data && data.bkashURL) {
-
-
-        console.log(data,'check the payment create');
-
-        return res.status(200).json({ redirectURL: data.bkashURL });
-      } else {
-        return res.status(500).json({ error: 'Failed to create payment, no redirect URL.' });
+    });
+  
+    console.log('check next middleware perfactly run ');
+  
+    const maxRetries = 3; // Number of retry attempts
+    let attempt = 0;
+    let lastError = null;
+  
+    // Retry mechanism
+    while (attempt < maxRetries) {
+      attempt += 1;
+      try {
+        console.log(`Attempt ${attempt} to create payment with amount: ${amount}`);
+  
+        // Sending the payment creation request
+        const { data } = await axios.post(
+          "https://tokenized.pay.bka.sh/v1.2.0-beta/tokenized/checkout/create",
+          {
+            mode: '0011',
+            payerReference: '1',
+            callbackURL: "https://server.winpay.online/bkash-callback-url", 
+            amount,
+            currency: 'BDT',
+            intent: 'sale',
+            merchantInvoiceNumber: `Inv${uuidv4().substring(0, 5)}`,
+          },
+          { headers: await this.getBkashHeaders() }
+        );
+  
+        // Check if the response has the `bkashURL`
+        if (data && data.bkashURL) {
+          console.log('Payment created successfully, redirecting to:', data.bkashURL);
+          return res.status(200).json({ redirectURL: data.bkashURL });
+        } else {
+          throw new Error('No redirect URL in the response');
+        }
+      } catch (error) {
+        // Capture and log the error for each attempt
+        lastError = error;
+        console.error(`Error on attempt ${attempt}:`, error.message);
+  
+        // If it's the last retry, return the error response
+        if (attempt === maxRetries) {
+          console.error('Max retries reached. Failing payment creation.');
+          return res.status(500).json({
+            error: 'Failed to create payment after multiple attempts',
+            details: lastError ? lastError.message : 'Unknown error',
+          });
+        }
       }
-
-    } catch (error) {
-      console.error('Error creating payment:', error.message);
-      return res.status(500).json({ error: 'Failed to create payment' });
+  
+      // Delay before retrying (optional)
+      console.log(`Retrying payment creation in 2 seconds...`);
+      await new Promise(resolve => setTimeout(resolve, 2000)); // 2-second delay before retry
     }
   }
 
