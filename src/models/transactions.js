@@ -58,6 +58,11 @@ const transactionSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    paymentID:{
+        type: String,
+        required: false,
+        trime: true,
+    },
     requestStatus: {
         type: String,
         default: 'Processing',

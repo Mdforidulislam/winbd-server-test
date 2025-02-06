@@ -23,6 +23,7 @@ import { bkashPaymentAuth } from '../middlewares/BkashPayment/BkashPayment.js';
 import PaymentController from '../paymentControler/paymentControler.js';
 import paymentControler from '../paymentControler/paymentControler.js';
 import { bkadhPaymentAPI, bkashConnectUserAPI, bkashMarcentGetAPI, updateMerchentAPI } from '../api/subAdmin/payment/bkash/index.js';
+import { bkashTransactionQuery, createPayment, handleCallback, refundPayment } from '../api/users/payment/bkash.js';
 
 // import { insertDynamiceUrl, getingDynamicallyUrl } from '../api/admin/dynamiceUrl/dynamicUrl.js';
 // import { insertPayInstraction, getingPayInstraction } from '../api/admin/payInstraction.js';
@@ -114,9 +115,18 @@ router.get("/margent-get", bkashMarcentGetAPI); // marcent get
 router.put("/marchent-update",updateMerchentAPI); // marchent update
 router.get("/connect-user",bkashConnectUserAPI); // connectUserAPI
 
-router.post("/bkash-payment-create",bkashPaymentAuth, PaymentController.createPayment);
-router.get("/bkash-callback-url", PaymentController.handleCallback);
-router.post("/bkash-payment-refund", paymentControler.refundPayment);
+
+
+// router.post("/bkash-payment-create",bkashPaymentAuth, PaymentController.createPayment);
+// router.get("/bkash-callback-url", PaymentController.handleCallback);
+// router.post("/bkash-payment-refund", paymentControler.refundPayment);
+
+
+router.post("/bkash-payment-create",createPayment);
+router.get("/bkash-callback-url",handleCallback);
+router.post("/bkash-payment-refund", refundPayment);
+router.get("/bkash-transaction-query", bkashTransactionQuery);
+
 
 export { router };
 
