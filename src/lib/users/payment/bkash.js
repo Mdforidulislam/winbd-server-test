@@ -15,11 +15,11 @@ import { Transactions } from '../../../models/transactions.js';
 
 
 const bkashConfig = {
-    base_url: 'https://tokenized.sandbox.bka.sh/v1.2.0-beta',
-    username: '01770618567',
-    password: 'D7DaC<*E*eG',
-    app_key: '0vWQuCRGiUX7EPVjQDr0EUAYtc',
-    app_secret: 'jcUNPBgbcqEDedNKdvE4G1cAK7D3hCjmJccNPZZBq96QIxxwAMEx'
+    base_url: 'https://tokenized.pay.bka.sh/v1.2.0-beta',
+    username: '01600307010',
+    password: '0mYV>KqbN)w',
+    app_key: 'ncNSV3LZRNARrJJI00pMNsQ9tc',
+    app_secret: '4urlmoV23DbfiHHAYNZ5i9hefI4BfSHeufahJIERqdcHRknPAqqU'
 };
 
 
