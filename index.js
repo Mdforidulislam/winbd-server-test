@@ -17,7 +17,7 @@ const port = process.env.PORT || 5000;
 // Middleware setup
 app.use(
   cors({
-      origin: ["https://winbd-client-fizf.vercel.app" ,"http://localhost:5173" ,"https://win-pay.xyz","https://winpay.online"], 
+      origin: ["https://winbd-client-fizf.vercel.app" ,"http://localhost:5173" ,"https://win-pay.xyz","https://winpay.online","http://www.win-pay.xyz"], 
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
       credentials: true, 
   })

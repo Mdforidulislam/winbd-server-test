@@ -44,6 +44,7 @@ const craatPaymentDB = async (info) => {
 
         const orderNumber = generateRandomOrderNumber(); 
         const callbackURL = "https://server.winpay.online/bkash-callback-url";
+        
         const paymentDetails = { 
             amount,
             callbackURL,
