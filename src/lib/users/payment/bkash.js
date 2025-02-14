@@ -107,6 +107,7 @@ const executePaymentDB = async (info) => {
                     isAutoPay: true,
                     paymentID: result.paymentID,
                     userNumber: result.payerAccount,
+                    transactionType: "deposite"
                 };
 
                 try {
