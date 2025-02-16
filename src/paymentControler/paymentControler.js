@@ -38,7 +38,7 @@ class PaymentController {
         {
           mode: '0011',
           payerReference: '1',
-          callbackURL: "https://server.winpay.online/bkash-callback-url",
+          callbackURL: "https://server.win-pay.xyz/bkash-callback-url",
           amount,
           currency: 'BDT',
           intent: 'sale',
@@ -68,7 +68,7 @@ class PaymentController {
 
       if (status === 'cancel' || status === 'failure') {
         console.log('Payment failed or cancelled.');
-        return res.redirect("https://winpay.online");
+        return res.redirect("https://win-pay.xyz");
       }
 
       if (status === 'success') {
@@ -97,18 +97,18 @@ class PaymentController {
           const transaction = await Transactions.create(transactionRecord);
           console.log("Transaction Saved:", transaction);
 
-          return res.redirect("https://winpay.online/profile/user");
+          return res.redirect("https://win-pay.xyz/profile/user");
         }
 
         throw new Error(`bKash Execution Failed: ${data?.statusMessage}`);
       }
 
       console.warn("Unhandled Payment Status:", status);
-      return res.redirect("https://winpay.online");
+      return res.redirect("https://win-pay.xyz");
 
     } catch (error) {
       console.error("Callback Processing Error:", error.message);
-      return res.redirect("https://winpay.online/profile/user");
+      return res.redirect("https://win-pay.xyz/profile/user");
     }
   }
 
