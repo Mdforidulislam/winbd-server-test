@@ -38,7 +38,7 @@ const bkashPaymentAuth = async (req, res, next) => {
                     username,
                     password,
                 }
-            }
+            } 
         );
 
         if (!data.id_token) {
